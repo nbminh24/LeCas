@@ -1,0 +1,64 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Backend",
+            "type": "shell",
+            "command": "cd backend && npm run dev",
+            "group": "none",
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": ".",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": ".",
+                        "endsPattern": "Server running on port"
+                    }
+                }
+            ]
+        },
+        {
+            "label": "Start Frontend",
+            "type": "shell",
+            "command": "cd frontend && npm run dev",
+            "group": "none",
+            "isBackground": true,
+            "problemMatcher": [
+                {
+                    "pattern": [
+                        {
+                            "regexp": ".",
+                            "file": 1,
+                            "location": 2,
+                            "message": 3
+                        }
+                    ],
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": "VITE",
+                        "endsPattern": "ready in|Local:"
+                    }
+                }
+            ]
+        },
+        {
+            "label": "Start Full App",
+            "dependsOn": [
+                "Start Backend",
+                "Start Frontend"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
