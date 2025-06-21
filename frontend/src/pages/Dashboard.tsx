@@ -20,13 +20,15 @@ const Dashboard = () => {
                     Logout
                 </button>
             </div>
-            <div className="dashboard-content">                <div className="user-info">
-                <h2>User Information</h2>
+            <div className="dashboard-content">                <div className="user-info">                <h2>User Information</h2>
                 <p>
-                    <strong>Name:</strong> {user?.name}
+                    <strong>Name:</strong> {user?.name || user?.displayName}
                 </p>
                 <p>
                     <strong>Email:</strong> {user?.email}
+                </p>
+                <p>
+                    <strong>Role:</strong> {user?.role}
                 </p>
             </div>
                 <div className="dashboard-body">

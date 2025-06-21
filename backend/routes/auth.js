@@ -21,11 +21,16 @@ router.post('/register', async (req, res) => {
                 .json({ message: 'User with this email or username already exists' });
         }
 
+        // Check if email is in admin list
+        const adminEmails = process.env.ADMIN_EMAILS ? process.env.ADMIN_EMAILS.split(',') : [];
+        const role = adminEmails.includes(email) ? 'admin' : 'user';
+
         // Create new user
         const newUser = new User({
             username,
             email,
             password,
+            role
         });
 
         // Save user to database
@@ -33,7 +38,7 @@ router.post('/register', async (req, res) => {
 
         // Generate JWT token
         const token = jwt.sign(
-            { id: newUser._id, username: newUser.username },
+            { id: newUser._id, username: newUser.username, role: newUser.role },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -44,6 +49,7 @@ router.post('/register', async (req, res) => {
                 id: newUser._id,
                 username: newUser.username,
                 email: newUser.email,
+                role: newUser.role
             },
         });
     } catch (error) {
@@ -67,11 +73,9 @@ router.post('/login', async (req, res) => {
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
-        }
-
-        // Generate JWT token
+        }        // Generate JWT token
         const token = jwt.sign(
-            { id: user._id, username: user.username },
+            { id: user._id, username: user.username, role: user.role },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
@@ -82,6 +86,7 @@ router.post('/login', async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
+                role: user.role
             },
         });
     } catch (error) {
@@ -127,10 +132,13 @@ router.get('/google',
 router.get('/google/callback',
     passport.authenticate('google', { session: false }),
     (req, res) => {
-        try {
-            // Generate JWT
+        try {            // Generate JWT
             const token = jwt.sign(
-                { id: req.user._id, username: req.user.username || req.user.displayName },
+                {
+                    id: req.user._id,
+                    username: req.user.username || req.user.displayName,
+                    role: req.user.role
+                },
                 process.env.JWT_SECRET,
                 { expiresIn: '1h' }
             );

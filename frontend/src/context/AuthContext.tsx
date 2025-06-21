@@ -12,6 +12,7 @@ interface User {
     email: string;
     displayName?: string;
     avatar?: string;
+    role: string;
     // Add any other user properties here
 }
 
