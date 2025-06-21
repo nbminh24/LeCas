@@ -1,124 +1,240 @@
+@import '../styles/theme.css';
+
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f5f5f5;
+    background-color: var(--off-white);
+    padding: var(--spacing-sm);
+    position: relative;
 }
 
 .login-form-container {
-    width: 400px;
-    padding: 30px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 360px;
+    background-color: var(--white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    animation: fadeIn 0.5s ease-out;
+    padding: var(--spacing-md);
 }
 
-h1 {
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Form styles */
+.login-form {
+    width: 100%;
+}
+
+.login-form-container h1 {
+    color: var(--secondary);
     text-align: center;
-    margin-bottom: 24px;
-    color: #333;
+    margin-bottom: var(--spacing-md);
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
 }
 
 label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: var(--spacing-xs);
     font-weight: 500;
-    color: #555;
+    color: var(--neutral-dark);
+    font-size: 0.85rem;
 }
 
 input {
     width: 100%;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: #f8f8f8;
+    font-size: 0.9rem;
+    color: var(--secondary);
+}
+
+input:focus {
+    outline: none;
+    background-color: var(--white);
+    border-color: #bbb;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+/* Google sign-in button */
+.google-sign-in-btn {
+    width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
+    background-color: white;
+    color: var(--neutral-dark);
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.google-sign-in-btn svg {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+.google-sign-in-btn:hover {
+    background-color: #f5f5f5;
 }
 
 .btn-submit {
     width: 100%;
     padding: 12px;
-    background-color: #4285f4;
+    background-color: #333;
     color: white;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
+    margin-top: 10px;
 }
 
 .btn-submit:hover {
-    background-color: #3367d6;
+    background-color: #222;
+}
+
+.btn-submit:active {
+    background-color: #000;
 }
 
 .error-message {
-    padding: 10px;
-    margin-bottom: 20px;
-    background-color: #ffebee;
-    color: #d32f2f;
-    border-radius: 4px;
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    background-color: rgba(214, 64, 69, 0.08);
+    color: var(--error);
+    border-radius: var(--radius-sm);
     text-align: center;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .register-link {
-    margin-top: 20px;
+    margin-top: var(--spacing-md);
     text-align: center;
+    color: var(--neutral);
+    font-size: 0.85rem;
 }
 
 .register-link a {
-    color: #4285f4;
+    color: var(--secondary);
+    font-weight: 500;
+    transition: color var(--transition-fast);
+}
+
+.register-link a:hover {
+    color: var(--accent-light);
+    text-decoration: underline;
+}
+
+/* Social login container */
+.social-login {
+    margin-top: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.social-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--white);
+    color: var(--neutral-dark);
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+/* Register link styling */
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: var(--neutral);
+}
+
+.register-link a {
+    color: var(--secondary);
     text-decoration: none;
+    font-weight: 500;
 }
 
 .register-link a:hover {
     text-decoration: underline;
 }
 
-.google-login-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: white;
-    color: #757575;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-    margin-top: 10px;
-}
-
-.google-login-btn:hover {
-    background-color: #f5f5f5;
-}
-
-.google-icon {
-    font-size: 20px;
-    margin-right: 10px;
-}
-
+/* Hide elements not needed in new design */
+.hidden,
+.login-subtitle,
+.login-illustration,
+.illustration-container,
+.social-login,
 .separator {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 20px 0;
+    display: none;
 }
 
-.separator::before,
-.separator::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #ddd;
+.illustration-container::after {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: -10px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: rgba(45, 141, 109, 0.1);
+    z-index: -1;
 }
 
-.separator span {
-    padding: 0 10px;
-    color: #757575;
-    font-size: 14px;
+/* Responsive design */
+@media (max-width: 992px) {
+    .login-form-container {
+        flex-direction: column;
+        max-width: 500px;
+    }
+
+    .login-illustration {
+        display: none;
+    }
+
+    .login-form {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-form {
+        padding: var(--spacing-lg);
+    }
 }

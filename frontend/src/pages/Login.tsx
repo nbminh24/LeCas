@@ -34,53 +34,50 @@ const Login = () => {
         } else {
             setError(result.message || 'Login failed');
         }
-    };
-
-    return (
+    }; return (
         <div className="login-container">
             <div className="login-form-container">
-                <h1>Login</h1>
-                {error && <div className="error-message">{error}</div>}
-                <form onSubmit={onSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={email}
-                            onChange={onChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={password}
-                            onChange={onChange}
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="btn-submit">
-                        Login
+                <div className="login-form">
+                    <h1>Log in</h1>
+                    {error && <div className="error-message">{error}</div>}
+
+                    <button type="button" className="google-sign-in-btn">
+                        <FcGoogle /> Sign in with Google
                     </button>
-                </form>
 
-                <div className="separator">
-                    <span>OR</span>
+                    <form onSubmit={onSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={email}
+                                onChange={onChange}
+                                placeholder="name@email.com"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                type="password" id="password"
+                                name="password"
+                                value={password}
+                                onChange={onChange}
+                                placeholder="••••••"
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn-submit">
+                            Sign in
+                        </button>
+                    </form>
+
+                    <p className="register-link">
+                        Don't have an account? <Link to="/register">Sign up</Link>
+                    </p>
                 </div>
-
-                <button className="google-login-btn" onClick={() => console.log('Google login clicked')}>
-                    <FcGoogle className="google-icon" />
-                    <span>Login with Google</span>
-                </button>
-
-                <p className="register-link">
-                    Don't have an account? <Link to="/register">Register</Link>
-                </p>
             </div>
         </div>
     );
