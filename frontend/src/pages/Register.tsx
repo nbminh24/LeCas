@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext.jsx';
+import { AuthContext } from '../context/AuthContext';
 import { FcGoogle } from 'react-icons/fc';
 import './Register.css';
 
 const Register = () => {
-    const { register } = useContext(AuthContext);
+    const { register, googleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -52,11 +52,13 @@ const Register = () => {
         <div className="register-container">
             <div className="register-form-container">                <div className="register-form">
                 <h1>Create your account</h1>
-                {error && <div className="error-message">{error}</div>}
-
-                <button type="button" className="google-sign-in-btn">
+                {error && <div className="error-message">{error}</div>}                <button
+                    type="button"
+                    className="google-sign-in-btn"
+                    onClick={googleLogin}
+                >
                     <FcGoogle /> Sign up with Google
-                </button>                <form onSubmit={onSubmit}>
+                </button><form onSubmit={onSubmit}>
                     <div className="form-group">
                         <label htmlFor="name">Name</label>
                         <input

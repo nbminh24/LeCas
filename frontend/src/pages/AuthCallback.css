@@ -1,0 +1,28 @@
+.auth-callback {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--off-white);
+    padding: var(--spacing-sm);
+}
+
+.auth-callback-container {
+    width: 100%;
+    max-width: 360px;
+    background-color: var(--white);
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.auth-callback-container h2 {
+    margin-bottom: 20px;
+    color: var(--secondary);
+}
+
+.auth-callback-container p {
+    color: var(--neutral);
+    margin-bottom: 10px;
+}

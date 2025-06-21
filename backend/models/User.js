@@ -5,10 +5,11 @@ const userSchema = new mongoose.Schema(
     {
         username: {
             type: String,
-            required: true,
+            required: function () { return !this.googleId; }, // Not required if using Google
             unique: true,
             trim: true,
             minlength: 3,
+            sparse: true // Allows null values to prevent unique index conflicts
         },
         email: {
             type: String,
@@ -19,9 +20,21 @@ const userSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            required: true,
+            required: function () { return !this.googleId; }, // Not required if using Google
             minlength: 6,
         },
+        googleId: {
+            type: String,
+            unique: true,
+            sparse: true // Allows null values to prevent unique index conflicts
+        },
+        displayName: {
+            type: String,
+            trim: true
+        },
+        avatar: {
+            type: String
+        }
     },
     {
         timestamps: true,
@@ -30,7 +43,8 @@ const userSchema = new mongoose.Schema(
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
+    // Skip hashing if password isn't modified or if using Google auth
+    if (!this.isModified('password') || this.googleId) return next();
 
     try {
         const salt = await bcrypt.genSalt(10);

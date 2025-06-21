@@ -7,8 +7,11 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 // Define types for authentication context
 interface User {
     id: string;
-    name: string;
+    username?: string;
+    name?: string;
     email: string;
+    displayName?: string;
+    avatar?: string;
     // Add any other user properties here
 }
 
@@ -24,6 +27,9 @@ interface AuthContextType {
     register: (formData: RegisterFormData) => Promise<AuthResponse>;
     login: (formData: LoginFormData) => Promise<AuthResponse>;
     logout: () => void;
+    googleLogin: () => void;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface RegisterFormData {
@@ -47,16 +53,29 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    useEffect(() => {
+    const [isLoading, setIsLoading] = useState<boolean>(true); useEffect(() => {
         const checkLoggedIn = async () => {
             try {
+                // Check for token in localStorage
                 const token = localStorage.getItem('token');
 
-                if (token) {
+                // Check for token in URL (from OAuth redirect)
+                const urlParams = new URLSearchParams(window.location.search);
+                const tokenFromUrl = urlParams.get('token');
+
+                // Use token from URL if available, otherwise use from localStorage
+                const activeToken = tokenFromUrl || token;
+
+                if (activeToken) {
+                    // Save token to localStorage if it came from URL
+                    if (tokenFromUrl) {
+                        localStorage.setItem('token', tokenFromUrl);
+                        // Clean up URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+
                     // Configure axios headers
-                    axios.defaults.headers.common['x-auth-token'] = token;
+                    axios.defaults.headers.common['x-auth-token'] = activeToken;
 
                     // Verify token and get user data
                     const res = await axios.get(`${API_URL}/auth/user`);
@@ -74,7 +93,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         };
 
         checkLoggedIn();
-    }, []);    // Register user
+    }, []);// Register user
     const register = async (formData: RegisterFormData): Promise<AuthResponse> => {
         try {
             const res = await axios.post(
@@ -116,9 +135,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 message: error.response?.data?.message || 'Login failed'
             };
         }
-    };
-
-    // Logout user
+    };    // Logout user
     const logout = () => {
         localStorage.removeItem('token');
         delete axios.defaults.headers.common['x-auth-token'];
@@ -126,18 +143,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsAuthenticated(false);
     };
 
-    return (
-        <AuthContext.Provider
-            value={{
-                user,
-                isAuthenticated,
-                isLoading,
-                register,
-                login,
-                logout,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
+    // Google OAuth login
+    const googleLogin = () => {
+        // Redirect to backend Google auth route
+        window.location.href = `${API_URL}/auth/google`;
+    };
+
+    return (<AuthContext.Provider
+        value={{
+            user,
+            isAuthenticated,
+            isLoading,
+            register,
+            login,
+            logout,
+            googleLogin,
+            setUser,
+            setIsAuthenticated,
+        }}
+    >
+        {children}
+    </AuthContext.Provider>
     );
 };

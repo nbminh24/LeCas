@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext.jsx';
+import { AuthContext } from '../context/AuthContext';
 import { FcGoogle } from 'react-icons/fc';
 import './Login.css';
 
 const Login = () => {
-    const { login } = useContext(AuthContext);
+    const { login, googleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -39,9 +39,11 @@ const Login = () => {
             <div className="login-form-container">
                 <div className="login-form">
                     <h1>Log in</h1>
-                    {error && <div className="error-message">{error}</div>}
-
-                    <button type="button" className="google-sign-in-btn">
+                    {error && <div className="error-message">{error}</div>}                    <button
+                        type="button"
+                        className="google-sign-in-btn"
+                        onClick={googleLogin}
+                    >
                         <FcGoogle /> Sign in with Google
                     </button>
 

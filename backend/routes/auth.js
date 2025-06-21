@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const User = require('../models/User');
 
 const router = express.Router();
@@ -115,5 +116,32 @@ router.get('/user', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
+
+// Google OAuth Routes
+router.get('/google',
+    passport.authenticate('google', {
+        scope: ['profile', 'email']
+    })
+);
+
+router.get('/google/callback',
+    passport.authenticate('google', { session: false }),
+    (req, res) => {
+        try {
+            // Generate JWT
+            const token = jwt.sign(
+                { id: req.user._id, username: req.user.username || req.user.displayName },
+                process.env.JWT_SECRET,
+                { expiresIn: '1h' }
+            );
+
+            // Redirect to frontend with token
+            res.redirect(`${process.env.CLIENT_URL || 'http://localhost:1204'}/auth/success?token=${token}`);
+        } catch (error) {
+            console.error('Google callback error:', error);
+            res.redirect(`${process.env.CLIENT_URL || 'http://localhost:1204'}/auth/failed`);
+        }
+    }
+);
 
 module.exports = router;
