@@ -1,4 +1,4 @@
-@import '../styles/theme.css';
+@import '../../../styles/theme.css';
 
 .login-container {
     display: flex;
@@ -154,29 +154,6 @@ input::placeholder {
     text-decoration: underline;
 }
 
-/* Social login container */
-.social-login {
-    margin-top: var(--spacing-md);
-    display: flex;
-    justify-content: center;
-    gap: var(--spacing-sm);
-}
-
-.social-login-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: var(--white);
-    color: var(--neutral-dark);
-    border: 1px solid var(--border-color);
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all var(--transition-fast);
-}
-
 /* Register link styling */
 .register-link {
     text-align: center;
@@ -196,25 +173,8 @@ input::placeholder {
 }
 
 /* Hide elements not needed in new design */
-.hidden,
-.login-subtitle,
-.login-illustration,
-.illustration-container,
-.social-login,
-.separator {
+.hidden {
     display: none;
-}
-
-.illustration-container::after {
-    content: "";
-    position: absolute;
-    left: -10px;
-    top: -10px;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: rgba(45, 141, 109, 0.1);
-    z-index: -1;
 }
 
 /* Responsive design */
@@ -222,10 +182,6 @@ input::placeholder {
     .login-form-container {
         flex-direction: column;
         max-width: 500px;
-    }
-
-    .login-illustration {
-        display: none;
     }
 
     .login-form {

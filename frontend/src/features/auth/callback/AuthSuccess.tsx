@@ -1,12 +1,12 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import axios from 'axios';
+import { useAuth } from '../../../hooks/useAuth';
+import { authService } from '../../../services/auth.service';
+import './AuthCallback.css';
 
 const AuthSuccess = () => {
     const navigate = useNavigate();
-    const { setIsAuthenticated, setUser } = useContext(AuthContext);
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    const { setIsAuthenticated, setUser } = useAuth();
 
     useEffect(() => {
         const handleAuthSuccess = async () => {
@@ -19,13 +19,10 @@ const AuthSuccess = () => {
                     // Store token in localStorage
                     localStorage.setItem('token', token);
 
-                    // Set the token in axios headers
-                    axios.defaults.headers.common['x-auth-token'] = token;
-
                     // Fetch user data
                     try {
-                        const res = await axios.get(`${API_URL}/auth/user`);
-                        setUser(res.data);
+                        const userData = await authService.getCurrentUser();
+                        setUser(userData);
                         setIsAuthenticated(true);
                     } catch (error) {
                         console.error('Error fetching user data:', error);
@@ -44,7 +41,7 @@ const AuthSuccess = () => {
         };
 
         handleAuthSuccess();
-    }, [navigate, setIsAuthenticated, setUser, API_URL]);
+    }, [navigate, setIsAuthenticated, setUser]);
 
     return (
         <div className="auth-callback">

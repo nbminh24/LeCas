@@ -1,11 +1,11 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
 import { FcGoogle } from 'react-icons/fc';
+import { useAuth } from '../../../hooks/useAuth';
 import './Login.css';
 
 const Login = () => {
-    const { login, googleLogin } = useContext(AuthContext);
+    const { login, googleLogin } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -29,17 +29,22 @@ const Login = () => {
             return;
         }
 
-        const result = await login(formData); if (result.success) {
+        const result = await login(formData);
+        if (result.success) {
             navigate('/dashboard');
         } else {
             setError(result.message || 'Login failed');
         }
-    }; return (
+    };
+
+    return (
         <div className="login-container">
             <div className="login-form-container">
                 <div className="login-form">
                     <h1>Log in</h1>
-                    {error && <div className="error-message">{error}</div>}                    <button
+                    {error && <div className="error-message">{error}</div>}
+
+                    <button
                         type="button"
                         className="google-sign-in-btn"
                         onClick={googleLogin}
@@ -63,7 +68,8 @@ const Login = () => {
                         <div className="form-group">
                             <label htmlFor="password">Password</label>
                             <input
-                                type="password" id="password"
+                                type="password"
+                                id="password"
                                 name="password"
                                 value={password}
                                 onChange={onChange}

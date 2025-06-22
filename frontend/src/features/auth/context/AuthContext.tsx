@@ -1,26 +1,8 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import type { User, AuthResponse, LoginFormData, RegisterFormData } from '../../../types/auth';
+import { authService } from '../../../services/auth.service';
 
-// Get API URL from environment variable or use default
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
-// Define types for authentication context
-interface User {
-    id: string;
-    username?: string;
-    name?: string;
-    email: string;
-    displayName?: string;
-    avatar?: string;
-    role: string;
-    // Add any other user properties here
-}
-
-interface AuthResponse {
-    success: boolean;
-    message?: string;
-}
-
+// Define the auth context type
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
@@ -33,17 +15,6 @@ interface AuthContextType {
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-interface RegisterFormData {
-    name: string;
-    email: string;
-    password: string;
-}
-
-interface LoginFormData {
-    email: string;
-    password: string;
-}
-
 interface AuthProviderProps {
     children: React.ReactNode;
 }
@@ -54,7 +25,9 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true); useEffect(() => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    useEffect(() => {
         const checkLoggedIn = async () => {
             try {
                 // Check for token in localStorage
@@ -75,37 +48,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                         window.history.replaceState({}, document.title, window.location.pathname);
                     }
 
-                    // Configure axios headers
-                    axios.defaults.headers.common['x-auth-token'] = activeToken;
-
-                    // Verify token and get user data
-                    const res = await axios.get(`${API_URL}/auth/user`);
-
-                    setUser(res.data);
+                    // Get user data
+                    const userData = await authService.getCurrentUser();
+                    setUser(userData);
                     setIsAuthenticated(true);
                 }
             } catch (error) {
                 console.error('Authentication error:', error);
                 localStorage.removeItem('token');
-                delete axios.defaults.headers.common['x-auth-token'];
             }
 
             setIsLoading(false);
         };
 
         checkLoggedIn();
-    }, []);// Register user
+    }, []);
+
+    // Register user
     const register = async (formData: RegisterFormData): Promise<AuthResponse> => {
         try {
-            const res = await axios.post(
-                `${API_URL}/auth/register`,
-                formData
-            );
+            const { token, user } = await authService.register(formData);
 
-            localStorage.setItem('token', res.data.token);
-            axios.defaults.headers.common['x-auth-token'] = res.data.token;
+            localStorage.setItem('token', token);
 
-            setUser(res.data.user);
+            setUser(user);
             setIsAuthenticated(true);
             return { success: true };
         } catch (error: any) {
@@ -119,15 +85,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Login user
     const login = async (formData: LoginFormData): Promise<AuthResponse> => {
         try {
-            const res = await axios.post(
-                `${API_URL}/auth/login`,
-                formData
-            );
+            const { token, user } = await authService.login(formData);
 
-            localStorage.setItem('token', res.data.token);
-            axios.defaults.headers.common['x-auth-token'] = res.data.token;
+            localStorage.setItem('token', token);
 
-            setUser(res.data.user);
+            setUser(user);
             setIsAuthenticated(true);
             return { success: true };
         } catch (error: any) {
@@ -136,10 +98,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 message: error.response?.data?.message || 'Login failed'
             };
         }
-    };    // Logout user
+    };
+
+    // Logout user
     const logout = () => {
         localStorage.removeItem('token');
-        delete axios.defaults.headers.common['x-auth-token'];
         setUser(null);
         setIsAuthenticated(false);
     };
@@ -147,23 +110,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Google OAuth login
     const googleLogin = () => {
         // Redirect to backend Google auth route
-        window.location.href = `${API_URL}/auth/google`;
+        window.location.href = authService.getGoogleAuthUrl();
     };
 
-    return (<AuthContext.Provider
-        value={{
-            user,
-            isAuthenticated,
-            isLoading,
-            register,
-            login,
-            logout,
-            googleLogin,
-            setUser,
-            setIsAuthenticated,
-        }}
-    >
-        {children}
-    </AuthContext.Provider>
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                isAuthenticated,
+                isLoading,
+                register,
+                login,
+                logout,
+                googleLogin,
+                setUser,
+                setIsAuthenticated,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
     );
 };

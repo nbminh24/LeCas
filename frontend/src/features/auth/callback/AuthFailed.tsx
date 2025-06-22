@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './AuthCallback.css';
 
 const AuthFailed = () => {
     const navigate = useNavigate();

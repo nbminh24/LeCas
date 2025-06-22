@@ -1,0 +1,42 @@
+@import '../../../styles/theme.css';
+
+.auth-callback {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--off-white);
+    padding: var(--spacing-md);
+}
+
+.auth-callback-container {
+    background-color: var(--white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-xl);
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.auth-callback-container h2 {
+    color: var(--secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.auth-callback-container p {
+    color: var(--neutral);
+    margin-bottom: var(--spacing-md);
+    line-height: 1.5;
+}

@@ -11,13 +11,20 @@ export default defineConfig(({ mode }) => {
   const port = parseInt(env.VITE_PORT || '3000')
 
   return {
-    plugins: [react()],
-    server: {
+    plugins: [react()], server: {
       port: port,
       open: true
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx']
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      alias: {
+        '@': resolve(__dirname, 'src'),
+        '@components': resolve(__dirname, 'src/components'),
+        '@features': resolve(__dirname, 'src/features'),
+        '@hooks': resolve(__dirname, 'src/hooks'),
+        '@services': resolve(__dirname, 'src/services'),
+        '@types': resolve(__dirname, 'src/types')
+      }
     },
     optimizeDeps: {
       exclude: ['node_modules_old']
