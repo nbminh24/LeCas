@@ -1,0 +1,250 @@
+.inventory-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.inventory-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.inventory-detail-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.product-sku {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.back-link {
+    padding: 8px 16px;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    background-color: #e0e0e0;
+}
+
+.inventory-loading,
+.inventory-error {
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+}
+
+.inventory-error h2 {
+    color: #dc3545;
+    margin-bottom: 10px;
+}
+
+.inventory-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 992px) {
+    .inventory-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.product-info-section,
+.inventory-status-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.product-image img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 8px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-details,
+.stock-status-card,
+.stock-history-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.detail-group {
+    margin-bottom: 20px;
+}
+
+.detail-group h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.detail-label {
+    font-weight: 600;
+    min-width: 120px;
+}
+
+.stock-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.stock-status-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.status-in-stock {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-low-stock {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.status-out-of-stock {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.stock-details {
+    margin-bottom: 20px;
+}
+
+.stock-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.stock-detail-row:last-child {
+    border-bottom: none;
+}
+
+.stock-label {
+    font-weight: 500;
+}
+
+.stock-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.update-stock-btn,
+.order-stock-btn {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.update-stock-btn {
+    background-color: #4a69dd;
+    color: white;
+}
+
+.update-stock-btn:hover {
+    background-color: #3a57c5;
+}
+
+.order-stock-btn {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.order-stock-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.stock-history-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.stock-transaction {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    align-items: center;
+}
+
+.stock-transaction:last-child {
+    border-bottom: none;
+}
+
+.transaction-date {
+    font-size: 14px;
+}
+
+.transaction-type {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.transaction-restock {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.transaction-order {
+    background-color: #cff4fc;
+    color: #055160;
+}
+
+.transaction-damage {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+.transaction-return {
+    background-color: #e2e3e5;
+    color: #41464b;
+}
+
+.transaction-quantity {
+    font-weight: 600;
+    text-align: right;
+}

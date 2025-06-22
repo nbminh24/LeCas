@@ -9,6 +9,8 @@ dotenv.config();
 // Then require modules that use environment variables
 const passport = require('./config/passport');
 const authRoutes = require('./routes/auth');
+const productRoutes = require('./routes/products');
+const orderRoutes = require('./routes/orders');
 
 // Create Express app
 const app = express();
@@ -25,6 +27,8 @@ app.use(passport.initialize());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Connect to MongoDB
 mongoose

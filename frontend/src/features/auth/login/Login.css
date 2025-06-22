@@ -5,20 +5,21 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: var(--off-white);
+    background-color: var(--white);
     padding: var(--spacing-sm);
     position: relative;
 }
 
 .login-form-container {
     width: 100%;
-    max-width: 360px;
+    max-width: 400px;
     background-color: var(--white);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
     position: relative;
     animation: fadeIn 0.5s ease-out;
-    padding: var(--spacing-md);
+    padding: var(--spacing-xl);
 }
 
 @keyframes fadeIn {
@@ -37,11 +38,13 @@
 }
 
 .login-form-container h1 {
-    color: var(--secondary);
+    color: var(--primary);
     text-align: center;
-    margin-bottom: var(--spacing-md);
-    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    font-size: 2rem;
     font-weight: 600;
+    font-family: var(--font-heading);
+    letter-spacing: -0.5px;
 }
 
 .form-group {
@@ -54,16 +57,19 @@ label {
     font-weight: 500;
     color: var(--neutral-dark);
     font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    background-color: #f8f8f8;
-    font-size: 0.9rem;
-    color: var(--secondary);
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background-color: var(--white);
+    font-size: 0.95rem;
+    color: var(--primary);
+    transition: all var(--transition-fast);
 }
 
 input:focus {
@@ -79,19 +85,46 @@ input::placeholder {
 /* Google sign-in button */
 .google-sign-in-btn {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     background-color: white;
     color: var(--neutral-dark);
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.9rem;
     font-weight: 500;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+.google-sign-in-btn::after {
+    content: "or";
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    padding: 0 10px;
+    color: var(--neutral);
+    font-size: 0.85rem;
+}
+
+.google-sign-in-btn::before {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.google-sign-in-btn:hover {
+    background-color: var(--subtle-accent);
 }
 
 .google-sign-in-btn svg {
@@ -105,24 +138,26 @@ input::placeholder {
 
 .btn-submit {
     width: 100%;
-    padding: 12px;
-    background-color: #333;
+    padding: 14px;
+    background-color: var(--primary);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-top: 10px;
+    margin-top: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all var(--transition-fast);
 }
 
 .btn-submit:hover {
-    background-color: #222;
+    background-color: var(--accent);
 }
 
 .btn-submit:active {
-    background-color: #000;
+    background-color: var(--secondary);
 }
 
 .error-message {
@@ -157,14 +192,28 @@ input::placeholder {
 /* Register link styling */
 .register-link {
     text-align: center;
-    margin-top: 20px;
-    font-size: 0.85rem;
+    margin-top: 30px;
+    font-size: 0.9rem;
     color: var(--neutral);
+    position: relative;
+    padding-top: 20px;
+}
+
+.register-link::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 25%;
+    right: 25%;
+    height: 1px;
+    background-color: var(--border-color);
 }
 
 .register-link a {
-    color: var(--secondary);
+    color: var(--primary);
     text-decoration: none;
+    font-weight: 600;
+    margin-left: 6px;
     font-weight: 500;
 }
 

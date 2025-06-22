@@ -31,13 +31,25 @@ const userSchema = new mongoose.Schema(
         displayName: {
             type: String,
             trim: true
-        }, avatar: {
+        },
+        avatar: {
             type: String
         },
         role: {
             type: String,
-            enum: ['user', 'admin'],
+            enum: ['user', 'admin', 'staff', 'staff_warehouse', 'staff_shipping'],
             default: 'user'
+        },
+        address: {
+            street: String,
+            city: String,
+            state: String,
+            zipCode: String,
+            country: String
+        },
+        phone: {
+            type: String,
+            trim: true
         }
     },
     {

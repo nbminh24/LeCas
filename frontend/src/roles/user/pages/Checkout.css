@@ -1,0 +1,118 @@
+.checkout-container {
+    max-width: var(--container-lg);
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.checkout-form-container {
+    background-color: var(--white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+}
+
+.order-summary {
+    background-color: var(--white);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+    height: fit-content;
+    position: sticky;
+    top: var(--spacing-md);
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    flex: 1;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.checkout-button {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: var(--spacing-lg);
+    font-weight: 600;
+}
+
+.checkout-button:hover {
+    background-color: var(--secondary);
+}
+
+.cart-items {
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.item-info h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.item-info p {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+.price-details {
+    margin-top: 20px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.price-row.total {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+}

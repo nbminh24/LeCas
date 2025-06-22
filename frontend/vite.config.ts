@@ -14,8 +14,7 @@ export default defineConfig(({ mode }) => {
     plugins: [react()], server: {
       port: port,
       open: true
-    },
-    resolve: {
+    }, resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
       alias: {
         '@': resolve(__dirname, 'src'),
@@ -23,7 +22,8 @@ export default defineConfig(({ mode }) => {
         '@features': resolve(__dirname, 'src/features'),
         '@hooks': resolve(__dirname, 'src/hooks'),
         '@services': resolve(__dirname, 'src/services'),
-        '@types': resolve(__dirname, 'src/types')
+        '@types': resolve(__dirname, 'src/types'),
+        '@constants': resolve(__dirname, 'src/constants')
       }
     },
     optimizeDeps: {
