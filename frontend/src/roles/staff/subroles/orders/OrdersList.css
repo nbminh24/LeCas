@@ -1,30 +1,246 @@
+/* Giao diện danh sách đơn hàng: gọn, nổi nhẹ, ít khoảng trống, theme trắng đen giống dashboard */
 .orders-list-container {
-    padding: 24px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    padding: 4px 2px 8px 2px;
+    min-height: 100vh;
+    background: #f7f7f7;
 }
 
 .orders-grid {
-    flex: 1;
-    background: var(--surface);
-    border-radius: 8px;
-    box-shadow: var(--shadow-sm);
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border: 1px solid #ececec;
     overflow: hidden;
+    margin-top: 0;
 }
 
-.primary-button {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 8px 16px;
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1rem;
+    background: #fff;
+}
+
+.data-table th,
+.data-table td {
+    padding: 6px 6px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+    color: #222;
+}
+
+.data-table th {
+    background: #fafbfc;
+    font-weight: 600;
+    color: #222;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr {
+    transition: background 0.15s;
+}
+
+.data-table tr:hover {
+    background: #f5f5f5;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: #eee;
+    color: #444;
+}
+
+.status-pending {
+    background: #fff8e1;
+    color: #f39c12;
+}
+
+.status-processing {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-shipped {
+    background: #e8f5e9;
+    color: #2ecc71;
+}
+
+.status-delivered {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-cancelled {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.link-button,
+.btn-view,
+.btn-edit {
+    background: #fff;
+    color: #444;
+    border: 1px solid #d1d5db;
     border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 0.97rem;
     cursor: pointer;
     font-weight: 500;
-    transition: background-color 0.2s;
+    transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
-.primary-button:hover {
-    background: var(--primary-dark);
+.link-button:hover,
+.btn-view:hover,
+.btn-edit:hover {
+    background: #f3f4f6;
+    color: #111;
+    border: 1px solid #bdbdbd;
+}
+
+/* Style cho header flex và modal tồn kho */
+.orders-header-flex {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 0;
+}
+
+.export-btn-right {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.modal-stock-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.18);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-stock {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+    padding: 24px 32px;
+    min-width: 320px;
+    max-width: 90vw;
+    color: #222;
+}
+
+.modal-stock h4 {
+    margin-top: 0;
+    font-size: 1.15rem;
+    color: #1976d2;
+}
+
+.modal-stock ul {
+    margin: 12px 0 18px 0;
+    padding-left: 18px;
+}
+
+.modal-stock li {
+    margin-bottom: 4px;
+    font-size: 1rem;
+}
+
+/* Style cho menu phụ (nút ba chấm) và popup action */
+.more-menu-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-more {
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1.3rem;
+    color: #888;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    transition: background 0.2s;
+    aspect-ratio: 1 / 1;
+    min-width: 32px;
+    min-height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+    box-shadow: none;
+}
+
+.btn-more:hover {
+    background: #f3f4f6;
+    border: none;
+}
+
+.more-menu-popup {
+    position: absolute;
+    top: 36px;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ececec;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
+    min-width: 140px;
+    z-index: 100;
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.more-menu-popup .btn-danger {
+    background: #fff0f0;
+    color: #c62828;
+    border: none;
+    border-radius: 0;
+    text-align: left;
+    padding: 8px 18px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.more-menu-popup .btn-danger:hover {
+    background: #ffeaea;
+}
+
+.orders-list-search-row {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 900px) {
+    .orders-list-container {
+        padding: 8px 2px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 7px 6px;
+        font-size: 0.97rem;
+    }
 }

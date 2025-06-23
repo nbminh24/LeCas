@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { UserRole } from '../../constants/routes';
 import './StaffLayout.css';
+import '../../styles/modern-ecommerce.css';
 
 const StaffLayout: React.FC = () => {
     const location = useLocation();
@@ -24,89 +25,28 @@ const StaffLayout: React.FC = () => {
         switch (user.role) {
             case UserRole.STAFF_ORDER:
                 return (
-                    <nav className="staff-nav">
-                        <div className="nav-section">
-                            <h3>Order Management</h3>
-                            <ul>
-                                <li>
-                                    <Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>
-                                        <span className="icon">📊</span>
-                                        Dashboard
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/staff/orders" className={isActive('/staff/orders')}>
-                                        <span className="icon">📦</span>
-                                        Orders
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/staff/search" className={isActive('/staff/search')}>
-                                        <span className="icon">🔍</span>
-                                        Search Orders
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+                    <ul>
+                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Dashboard</Link></li>
+                        <li><Link to="/staff/orders" className={isActive('/staff/orders')}>Orders</Link></li>
+                    </ul>
                 );
 
             case UserRole.STAFF_WAREHOUSE:
                 return (
-                    <nav className="staff-nav">
-                        <div className="nav-section">
-                            <h3>Warehouse Management</h3>
-                            <ul>
-                                <li>
-                                    <Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>
-                                        <span className="icon">📊</span>
-                                        Dashboard
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/staff/warehouse/inventory" className={isActive('/staff/warehouse/inventory')}>
-                                        <span className="icon">📦</span>
-                                        Inventory
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/staff/warehouse/reports" className={isActive('/staff/warehouse/reports')}>
-                                        <span className="icon">📋</span>
-                                        Stock Reports
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+                    <ul>
+                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Dashboard</Link></li>
+                        <li><Link to="/staff/warehouse/inventory" className={isActive('/staff/warehouse/inventory')}>Inventory</Link></li>
+                        <li><Link to="/staff/warehouse/reports" className={isActive('/staff/warehouse/reports')}>Stock Reports</Link></li>
+                    </ul>
                 );
 
             case UserRole.STAFF_SHIPPING:
                 return (
-                    <nav className="staff-nav">
-                        <div className="nav-section">
-                            <h3>Shipping Management</h3>
-                            <ul>
-                                <li>
-                                    <Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>
-                                        <span className="icon">📊</span>
-                                        Dashboard
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/staff/shipping/shipments" className={isActive('/staff/shipping/shipments')}>
-                                        <span className="icon">🚚</span>
-                                        Shipments
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/staff/shipping/tracking" className={isActive('/staff/shipping/tracking')}>
-                                        <span className="icon">📍</span>
-                                        Tracking
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
+                    <ul>
+                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Dashboard</Link></li>
+                        <li><Link to="/staff/shipping/shipments" className={isActive('/staff/shipping/shipments')}>Shipments</Link></li>
+                        <li><Link to="/staff/shipping/tracking" className={isActive('/staff/shipping/tracking')}>Tracking</Link></li>
+                    </ul>
                 );
             default:
                 return null;
@@ -121,53 +61,45 @@ const StaffLayout: React.FC = () => {
         user.role.replace('staff_', '').slice(1);
 
     return (
-        <div className="staff-layout">
-            <aside className="staff-sidebar">
-                <div className="sidebar-header">
-                    <div className="staff-logo">
-                        <span className="logo-icon">🏢</span>
-                        <h2>{roleDisplay} Portal</h2>
-                    </div>
-                    <div className="user-info">
-                        <img
-                            src={user.avatar || '/default-avatar.png'}
-                            alt={user.displayName || user.email}
-                            className="user-avatar"
-                        />
-                        <div className="user-details">
-                            <span className="user-name">{user.displayName || user.email}</span>
-                            <span className="user-role">{roleDisplay}</span>
-                        </div>
+        <div className="staff-layout modern-layout">
+            <aside className="staff-sidebar admin-sidebar">
+                <div className="sidebar-header admin-logo">
+                    <span className="logo-icon">🏢</span>
+                    <h2>{roleDisplay} Portal</h2>
+                </div>
+                <div className="user-info admin-profile">
+                    <img
+                        src={user.avatar || '/default-avatar.png'}
+                        alt={user.displayName || user.email}
+                        className="user-avatar"
+                    />
+                    <div className="user-details">
+                        <span className="user-name">{user.displayName || user.email}</span>
+                        <span className="user-role">{roleDisplay}</span>
                     </div>
                 </div>
-
-                {renderNavigation()}
-
+                <nav className="staff-nav admin-nav">
+                    {renderNavigation()}
+                </nav>
                 <div className="sidebar-footer">
-                    <button onClick={handleLogout} className="logout-btn">
-                        <span className="icon">🚪</span>
-                        Logout
-                    </button>
                 </div>
             </aside>
-
-            <main className="staff-content">
-                <header className="content-header">
-                    <div className="header-actions">
-                        <button className="icon-button">
-                            <span className="icon">🔔</span>
-                            <span className="badge">3</span>
-                        </button>
-                        <button className="icon-button">
-                            <span className="icon">⚙️</span>
-                        </button>
+            <div className="staff-content admin-content">
+                <header className="staff-header admin-header">
+                    <div className="staff-user admin-user">
+                        <div className="staff-profile admin-profile">
+                            <img
+                                src={user.avatar || '/default-avatar.png'}
+                                alt={user.displayName || user.email}
+                            />
+                            <span>{user.displayName || user.email}</span>
+                        </div>
                     </div>
                 </header>
-
-                <div className="content-main">
+                <main className="staff-main admin-main">
                     <Outlet />
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     );
 };

@@ -36,6 +36,9 @@ const StaffRoutes = () => {
                         <Route element={<ProtectedRoute requiredRole={UserRole.STAFF_ORDER} />}>                            <Route index element={<Dashboard />} />
                             <Route path="dashboard" element={<Dashboard />} />
                             <Route path="orders" element={<OrdersList />} />
+                            <Route path="orders/pending" element={<OrdersList />} />
+                            <Route path="orders/ready-to-ship" element={<OrdersList />} />
+                            <Route path="orders/shipped" element={<OrdersList />} />
                             <Route path="orders/:id" element={<OrderDetails />} />
                         </Route>
                     </Route>

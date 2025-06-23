@@ -1,5 +1,7 @@
 .staff-dashboard {
-    padding: 20px;
+    padding: 16px 8px;
+    background: #f7f7f7;
+    min-height: 100vh;
 }
 
 .staff-dashboard h1 {
@@ -206,4 +208,313 @@
 
 .view-all a:hover {
     background-color: #e9ecef;
+}
+
+/* Đảm bảo theme trắng đen, card nổi nhẹ, border rõ, font dễ đọc, nút đen trắng như ảnh */
+.staff-dashboard.order-dashboard {
+    background: #f7f7f7;
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.dashboard-header h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #222;
+    font-weight: 700;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.date-picker {
+    padding: 4px 8px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    background: #fff;
+    color: #222;
+}
+
+.btn-export {
+    padding: 4px 12px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-export:hover {
+    background: #222;
+    color: #fff;
+}
+
+.dashboard-columns {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.dashboard-column {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border: 1px solid #ececec;
+    flex: 1;
+    min-width: 220px;
+    padding: 10px 8px 8px 8px;
+    font-size: 0.97rem;
+}
+
+.dashboard-column h3 {
+    font-size: 1.05rem;
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.order-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.order-card {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #ececec;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    color: #222;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 10px;
+    font-size: 0.97rem;
+}
+
+.order-card b {
+    color: #111;
+}
+
+.order-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-view,
+.btn-action {
+    padding: 2px 10px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #444;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.btn-view.important,
+.btn-action.important {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+}
+
+.btn-view.important:hover,
+.btn-action.important:hover {
+    background: #222;
+    color: #fff;
+    border: 1.5px solid #222;
+}
+
+.btn-view:hover,
+.btn-action:hover {
+    background: #f3f4f6;
+    color: #111;
+    border: 1px solid #bdbdbd;
+}
+
+.dashboard-activity {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border: 1px solid #ececec;
+    color: #222;
+    padding: 10px 12px;
+    font-size: 0.96rem;
+}
+
+.dashboard-activity h4 {
+    color: #111;
+    font-size: 1rem;
+    margin: 0 0 6px 0;
+    font-weight: 600;
+}
+
+.dashboard-activity ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.dashboard-activity li {
+    margin-bottom: 2px;
+}
+
+/* Style cho dashboard mới: stat card, clickable, badge trạng thái, layout gọn gàng */
+.stat-cards-row {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.stat-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border: 1px solid #ececec;
+    padding: 18px 24px;
+    min-width: 170px;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s, border 0.2s, background 0.2s;
+}
+
+.stat-card.clickable:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+    border: 1.5px solid #111;
+    background: #f5f5f5;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    color: #111;
+    font-size: 2.1rem;
+    font-weight: 700;
+}
+
+.dashboard-lists {
+    display: flex;
+    gap: 24px;
+}
+
+.orders-list-block,
+.activity-block {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    border: 1px solid #ececec;
+    padding: 16px 18px;
+    flex: 1;
+}
+
+.orders-list-block h3,
+.activity-block h3 {
+    font-size: 1.1rem;
+    margin: 0 0 10px 0;
+    color: #222;
+}
+
+.order-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.order-card {
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #ececec;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    color: #222;
+    padding: 8px 12px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.order-status-badge {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    background: #eee;
+    color: #444;
+}
+
+.status-pending {
+    background: #fff8e1;
+    color: #f39c12;
+}
+
+.status-readyToShip {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-shipped {
+    background: #e8f5e9;
+    color: #2ecc71;
+}
+
+.activity-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.activity-list li {
+    margin-bottom: 6px;
+    font-size: 0.97rem;
+    color: #333;
+}
+
+.activity-time {
+    color: #888;
+    font-size: 0.95rem;
+    margin-right: 8px;
+}
+
+@media (max-width: 900px) {
+    .dashboard-columns {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .dashboard-column {
+        min-width: 0;
+    }
+
+    .stat-cards-row,
+    .dashboard-lists {
+        flex-direction: column;
+        gap: 12px;
+    }
 }

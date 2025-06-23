@@ -323,6 +323,104 @@ input:checked+.toggle-slider:before {
     box-shadow: 0 0 0 2px var(--accent);
 }
 
+/* Button styles */
+.btn-primary,
+.btn-action.important,
+.btn-export,
+.btn-danger {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.btn-primary:hover,
+.btn-action.important:hover,
+.btn-export:hover,
+.btn-danger:hover {
+    background: #222;
+    color: #fff;
+    border: 1.5px solid #222;
+}
+
+.btn-secondary,
+.btn-view,
+.btn-edit,
+.btn-outline,
+.btn-action,
+.btn-wishlist,
+.btn-add-cart,
+.btn-add-to-cart,
+.btn-notify,
+.btn-print,
+.shopping-btn,
+.profile-button.secondary-button {
+    background: #fff;
+    color: #444;
+    border: 1px solid #d1d5db;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 6px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.btn-secondary:hover,
+.btn-view:hover,
+.btn-edit:hover,
+.btn-outline:hover,
+.btn-action:hover,
+.btn-wishlist:hover,
+.btn-add-cart:hover,
+.btn-add-to-cart:hover,
+.btn-notify:hover,
+.btn-print:hover,
+.shopping-btn:hover,
+.profile-button.secondary-button:hover {
+    background: #f3f4f6;
+    color: #111;
+    border: 1px solid #bdbdbd;
+}
+
+.btn-danger {
+    background: #c00;
+    color: #fff;
+    border: 1px solid #c00;
+}
+
+.btn-danger:hover {
+    background: #a00;
+    border: 1.5px solid #a00;
+}
+
+.add-to-cart-btn,
+.add-to-cart,
+.buy-now {
+    background: #111;
+    color: #fff;
+    border: 1px solid #111;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 6px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.add-to-cart-btn:hover,
+.add-to-cart:hover,
+.buy-now:hover {
+    background: #222;
+    color: #fff;
+    border: 1.5px solid #222;
+}
+
 /* iOS-style buttons */
 .btn {
     display: inline-flex;
@@ -362,17 +460,6 @@ input:checked+.toggle-slider:before {
 
 .btn-accent:hover {
     background: var(--accent-light);
-}
-
-.btn-outline {
-    background: transparent;
-    border: 1px solid var(--primary);
-    color: var(--primary);
-}
-
-.btn-outline:hover {
-    background: var(--primary);
-    color: var(--white);
 }
 
 /* Form styling */

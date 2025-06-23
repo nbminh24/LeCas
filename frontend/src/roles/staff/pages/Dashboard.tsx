@@ -1,135 +1,124 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { UserRole } from '../../../constants/routes';
 import './Dashboard.css';
 
+// Mock data for demonstration
+const mockStats = (date: string) => ({
+    total: 12,
+    pending: 4,
+    readyToShip: 3,
+    shipped: 5,
+});
+const mockOrders = [
+    { id: 'ORD-1001', customer: 'John Smith', date: '2025-06-23', status: 'pending', items: 3 },
+    { id: 'ORD-1002', customer: 'Sarah Johnson', date: '2025-06-23', status: 'pending', items: 2 },
+    { id: 'ORD-1003', customer: 'Michael Brown', date: '2025-06-23', status: 'readyToShip', items: 1 },
+    { id: 'ORD-1004', customer: 'Emily Davis', date: '2025-06-23', status: 'readyToShip', items: 4 },
+    { id: 'ORD-1005', customer: 'David Wilson', date: '2025-06-23', status: 'shipped', items: 2 },
+    { id: 'ORD-1006', customer: 'Jessica Taylor', date: '2025-06-23', status: 'shipped', items: 1 },
+];
+const mockActivity = [
+    { time: '09:45', desc: 'Xác nhận đơn #1001' },
+    { time: '10:15', desc: 'Hủy đơn #1007' },
+    { time: '11:00', desc: 'Bàn giao đơn #1005 cho vận chuyển' },
+];
+
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
+    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().slice(0, 10));
+    const [searchText, setSearchText] = useState('');
+    const stats = mockStats(selectedDate);
 
-    const renderDashboardContent = () => {
-        if (!user) return null;
-
-        switch (user.role) {
-            case UserRole.STAFF_ORDER:
-                return (
-                    <div className="dashboard-grid">
-                        <div className="stat-card">
-                            <h3>Pending Orders</h3>
-                            <div className="stat-value">23</div>
-                            <div className="stat-label">Needs Processing</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Processing</h3>
-                            <div className="stat-value">15</div>
-                            <div className="stat-label">In Progress</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Completed Today</h3>
-                            <div className="stat-value">45</div>
-                            <div className="stat-label">Orders Processed</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Customer Queries</h3>
-                            <div className="stat-value">7</div>
-                            <div className="stat-label">Need Response</div>
-                        </div>
-                    </div>
-                );
-
-            case UserRole.STAFF_WAREHOUSE:
-                return (
-                    <div className="dashboard-grid">
-                        <div className="stat-card">
-                            <h3>Low Stock Items</h3>
-                            <div className="stat-value">12</div>
-                            <div className="stat-label">Need Restock</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Pending Deliveries</h3>
-                            <div className="stat-value">8</div>
-                            <div className="stat-label">Arriving Today</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Stock Updates</h3>
-                            <div className="stat-value">34</div>
-                            <div className="stat-label">Items Updated</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Storage Usage</h3>
-                            <div className="stat-value">78%</div>
-                            <div className="stat-label">Capacity</div>
-                        </div>
-                    </div>
-                );
-
-            case UserRole.STAFF_SHIPPING:
-                return (
-                    <div className="dashboard-grid">
-                        <div className="stat-card">
-                            <h3>Pending Shipments</h3>
-                            <div className="stat-value">18</div>
-                            <div className="stat-label">To Process</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>In Transit</h3>
-                            <div className="stat-value">42</div>
-                            <div className="stat-label">Active Deliveries</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Delivered Today</h3>
-                            <div className="stat-value">27</div>
-                            <div className="stat-label">Completed</div>
-                        </div>
-                        <div className="stat-card">
-                            <h3>Issues</h3>
-                            <div className="stat-value">3</div>
-                            <div className="stat-label">Need Attention</div>
-                        </div>
-                    </div>
-                );
-
+    // Click handler for stat cards
+    const handleStatClick = (type: string) => {
+        switch (type) {
+            case 'pending':
+                navigate('/staff/orders/pending?status=pending');
+                break;
+            case 'readyToShip':
+                navigate('/staff/orders/ready-to-ship?status=readyToShip');
+                break;
+            case 'shipped':
+                navigate('/staff/orders/shipped?status=shipped');
+                break;
             default:
-                return <div>Invalid staff role</div>;
+                navigate('/staff/orders');
         }
     };
 
+    // Filter orders by date
+    const ordersToday = mockOrders.filter(o => o.date === selectedDate);
+    const filteredOrdersToday = ordersToday.filter(order =>
+        order.id.toLowerCase().includes(searchText.toLowerCase()) ||
+        order.customer.toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    if (!user || user.role !== UserRole.STAFF_ORDER) {
+        return <div className="staff-dashboard">Unauthorized or not staff order role.</div>;
+    }
+
     return (
-        <div className="staff-dashboard">
-            {renderDashboardContent()}
-            <div className="dashboard-charts">
-                <div className="chart-container">
-                    <h3>Recent Activity</h3>
-                    <div className="activity-list">
-                        <div className="activity-item">
-                            <span className="activity-time">09:45 AM</span>
-                            <span className="activity-description">New order #12345 received</span>
-                        </div>
-                        <div className="activity-item">
-                            <span className="activity-time">10:15 AM</span>
-                            <span className="activity-description">Updated inventory for SKU-789</span>
-                        </div>
-                        <div className="activity-item">
-                            <span className="activity-time">11:30 AM</span>
-                            <span className="activity-description">Shipment #54321 marked as delivered</span>
-                        </div>
-                    </div>
+        <div className="staff-dashboard order-dashboard">
+            <div className="dashboard-header">
+                <h2>Order Dashboard</h2>
+                <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={e => setSelectedDate(e.target.value)}
+                    className="date-picker"
+                />
+            </div>
+            <div className="stat-cards-row">
+                <div className="stat-card" onClick={() => handleStatClick('total')}>
+                    <div className="stat-label">Tổng đơn nhận</div>
+                    <div className="stat-value">{stats.total}</div>
                 </div>
-                <div className="chart-container">
-                    <h3>Tasks</h3>
-                    <div className="task-list">
-                        <div className="task-item">
-                            <input type="checkbox" id="task1" />
-                            <label htmlFor="task1">Process pending orders</label>
-                        </div>
-                        <div className="task-item">
-                            <input type="checkbox" id="task2" />
-                            <label htmlFor="task2">Update shipping status</label>
-                        </div>
-                        <div className="task-item">
-                            <input type="checkbox" id="task3" />
-                            <label htmlFor="task3">Review inventory reports</label>
-                        </div>
+                <div className="stat-card clickable" onClick={() => handleStatClick('pending')}>
+                    <div className="stat-label">Chờ xác nhận</div>
+                    <div className="stat-value">{stats.pending}</div>
+                </div>
+                <div className="stat-card clickable" onClick={() => handleStatClick('readyToShip')}>
+                    <div className="stat-label">Chờ bàn giao vận chuyển</div>
+                    <div className="stat-value">{stats.readyToShip}</div>
+                </div>
+                <div className="stat-card clickable" onClick={() => handleStatClick('shipped')}>
+                    <div className="stat-label">Đã bàn giao vận chuyển</div>
+                    <div className="stat-value">{stats.shipped}</div>
+                </div>
+            </div>
+            <div className="dashboard-lists">
+                <div className="orders-list-block">
+                    <div className="orders-list-search-row">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm đơn hàng..."
+                            value={searchText}
+                            onChange={e => setSearchText(e.target.value)}
+                            className="orders-list-search-input"
+                        />
                     </div>
+                    <h3>Danh sách đơn đã nhận ({filteredOrdersToday.length})</h3>
+                    <ul className="order-list">
+                        {filteredOrdersToday.map(order => (
+                            <li key={order.id} className="order-card">
+                                <div>
+                                    <b>{order.id}</b> - {order.customer} ({order.items} sản phẩm)
+                                    <span className={`order-status-badge status-${order.status}`}>{order.status}</span>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="activity-block">
+                    <h3>Nhật ký hoạt động</h3>
+                    <ul className="activity-list">
+                        {mockActivity.map((a, idx) => (
+                            <li key={idx}><span className="activity-time">{a.time}</span> {a.desc}</li>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </div>

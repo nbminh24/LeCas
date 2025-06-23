@@ -1,22 +1,32 @@
+/* Đồng bộ hóa UI Staff với Admin/User: dùng tone sáng, bo góc, padding, font, shadow, hover, active, v.v. */
+
 .staff-layout {
     display: flex;
     height: 100vh;
+    font-family: var(--font-primary);
+    background-color: var(--neutral-light);
 }
 
 .staff-sidebar {
-    width: 250px;
-    background-color: #34495e;
-    color: white;
+    width: 280px;
+    background-color: var(--white);
+    color: var(--primary);
     padding: 20px 0;
+    border-right: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    overflow-y: auto;
+    z-index: 10;
 }
 
-.staff-logo {
+.sidebar-header {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
-    padding: 10px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--primary);
+    letter-spacing: -0.02em;
 }
 
 .staff-nav ul {
@@ -26,45 +36,49 @@
 }
 
 .staff-nav li {
-    margin-bottom: 5px;
-}
-
-.staff-nav-subtitle {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    padding: 10px 20px;
-    margin-top: 15px;
-    color: #bdc3c7;
-    font-weight: bold;
+    margin-bottom: 4px;
 }
 
 .staff-nav a {
     display: block;
-    padding: 10px 20px;
-    color: white;
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: var(--neutral-dark);
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 0 var(--spacing-sm);
 }
 
-.staff-nav a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+.staff-nav a:hover,
+.staff-nav a.active {
+    background-color: var(--off-white);
+    color: var(--primary);
+    font-weight: 600;
+    border-left: 3px solid var(--primary);
 }
 
 .staff-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #f5f7fa;
+    background-color: var(--neutral-light);
+    overflow-y: auto;
 }
 
 .staff-header {
-    background-color: white;
+    background-color: var(--white);
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 0 var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .staff-search {
@@ -72,20 +86,36 @@
 }
 
 .staff-search input {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
     outline: none;
     width: 300px;
+    font-family: var(--font-primary);
+    transition: all var(--transition-fast);
+    background-color: var(--off-white);
+}
+
+.staff-search input:focus {
+    border-color: var(--neutral);
+    background-color: var(--white);
+    box-shadow: var(--shadow-input);
 }
 
 .staff-search button {
-    padding: 8px 12px;
-    background-color: #2980b9;
-    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--primary);
+    color: var(--white);
     border: none;
-    border-radius: 0 4px 4px 0;
+    border-radius: var(--radius-md);
+    margin-left: var(--spacing-xs);
     cursor: pointer;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.staff-search button:hover {
+    background-color: var(--secondary);
 }
 
 .staff-user {
@@ -95,15 +125,24 @@
 
 .staff-notifications {
     position: relative;
-    margin-right: 20px;
+    margin-right: var(--spacing-lg);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    background-color: var(--off-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.staff-notifications span {
+.staff-notifications:after {
+    content: '3';
     position: absolute;
     top: -5px;
     right: -5px;
-    background-color: #e74c3c;
-    color: white;
+    background-color: var(--primary);
+    color: var(--white);
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -123,10 +162,68 @@
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    border: 2px solid var(--off-white);
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    margin-left: 8px;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.user-role {
+    font-size: 0.9rem;
+    color: var(--neutral);
+}
+
+.sidebar-footer {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.logout-btn {
+    background: var(--off-white);
+    border: none;
+    padding: 8px 18px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--primary);
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.logout-btn:hover {
+    background: var(--secondary);
+    color: var(--white);
 }
 
 .staff-main {
     flex: 1;
-    padding: 20px;
+    padding: var(--spacing-lg);
     overflow-y: auto;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .staff-sidebar {
+        width: 70px;
+        padding: 10px 0;
+    }
+
+    .sidebar-header h2,
+    .user-details,
+    .sidebar-footer {
+        display: none;
+    }
+
+    .staff-nav a {
+        padding: var(--spacing-md);
+        font-size: 0.9rem;
+        margin: 0;
+    }
 }
