@@ -29,6 +29,12 @@
     color: #222;
 }
 
+.data-table th[data-key="actions"],
+.data-table td[data-key="actions"] {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
 .data-table th {
     background: #fafbfc;
     font-weight: 600;
@@ -85,6 +91,8 @@
 .actions {
     display: flex;
     gap: 8px;
+    justify-content: center;
+    align-items: center;
 }
 
 .link-button,
@@ -112,10 +120,10 @@
 /* Style cho header flex và modal tồn kho */
 .orders-header-flex {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 0;
+    gap: 0;
+    margin-bottom: 18px;
 }
 
 .export-btn-right {
@@ -231,6 +239,7 @@
 
 .orders-list-search-row {
     margin-bottom: 10px;
+    margin-right: 24px;
 }
 
 @media (max-width: 900px) {

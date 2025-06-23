@@ -26,26 +26,26 @@ const StaffLayout: React.FC = () => {
             case UserRole.STAFF_ORDER:
                 return (
                     <ul>
-                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Dashboard</Link></li>
-                        <li><Link to="/staff/orders" className={isActive('/staff/orders')}>Orders</Link></li>
+                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Bảng điều khiển</Link></li>
+                        <li><Link to="/staff/orders" className={isActive('/staff/orders')}>Đơn hàng</Link></li>
                     </ul>
                 );
 
             case UserRole.STAFF_WAREHOUSE:
                 return (
                     <ul>
-                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Dashboard</Link></li>
-                        <li><Link to="/staff/warehouse/inventory" className={isActive('/staff/warehouse/inventory')}>Inventory</Link></li>
-                        <li><Link to="/staff/warehouse/reports" className={isActive('/staff/warehouse/reports')}>Stock Reports</Link></li>
+                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Bảng điều khiển</Link></li>
+                        <li><Link to="/staff/warehouse/inventory" className={isActive('/staff/warehouse/inventory')}>Tồn kho</Link></li>
+                        <li><Link to="/staff/warehouse/reports" className={isActive('/staff/warehouse/reports')}>Báo cáo tồn kho</Link></li>
                     </ul>
                 );
 
             case UserRole.STAFF_SHIPPING:
                 return (
                     <ul>
-                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Dashboard</Link></li>
-                        <li><Link to="/staff/shipping/shipments" className={isActive('/staff/shipping/shipments')}>Shipments</Link></li>
-                        <li><Link to="/staff/shipping/tracking" className={isActive('/staff/shipping/tracking')}>Tracking</Link></li>
+                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Bảng điều khiển</Link></li>
+                        <li><Link to="/staff/shipping/shipments" className={isActive('/staff/shipping/shipments')}>Lô hàng</Link></li>
+                        <li><Link to="/staff/shipping/tracking" className={isActive('/staff/shipping/tracking')}>Theo dõi</Link></li>
                     </ul>
                 );
             default:
@@ -65,24 +65,11 @@ const StaffLayout: React.FC = () => {
             <aside className="staff-sidebar admin-sidebar">
                 <div className="sidebar-header admin-logo">
                     <span className="logo-icon">🏢</span>
-                    <h2>{roleDisplay} Portal</h2>
-                </div>
-                <div className="user-info admin-profile">
-                    <img
-                        src={user.avatar || '/default-avatar.png'}
-                        alt={user.displayName || user.email}
-                        className="user-avatar"
-                    />
-                    <div className="user-details">
-                        <span className="user-name">{user.displayName || user.email}</span>
-                        <span className="user-role">{roleDisplay}</span>
-                    </div>
+                    <h2>Quản lý đơn hàng</h2>
                 </div>
                 <nav className="staff-nav admin-nav">
                     {renderNavigation()}
                 </nav>
-                <div className="sidebar-footer">
-                </div>
             </aside>
             <div className="staff-content admin-content">
                 <header className="staff-header admin-header">

@@ -63,7 +63,7 @@ const Dashboard: React.FC = () => {
     return (
         <div className="staff-dashboard order-dashboard">
             <div className="dashboard-header">
-                <h2>Order Dashboard</h2>
+                <h2>Bảng điều khiển đơn hàng</h2>
                 <input
                     type="date"
                     value={selectedDate}
@@ -106,7 +106,7 @@ const Dashboard: React.FC = () => {
                             <li key={order.id} className="order-card">
                                 <div>
                                     <b>{order.id}</b> - {order.customer} ({order.items} sản phẩm)
-                                    <span className={`order-status-badge status-${order.status}`}>{order.status}</span>
+                                    <span className={`order-status-badge status-${order.status}`}>{order.status === 'pending' ? 'Chờ xác nhận' : order.status === 'readyToShip' ? 'Chờ bàn giao' : order.status === 'shipped' ? 'Đã bàn giao' : order.status}</span>
                                 </div>
                             </li>
                         ))}

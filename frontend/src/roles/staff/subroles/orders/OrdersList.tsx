@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { PageHeader } from '../../../../components/shared/PageHeader';
 import { DataGrid } from '../../../../components/shared/DataGrid';
 import { Portal } from '../../../../components/shared/Portal';
 import './OrdersList.css';
@@ -55,13 +54,17 @@ const OrdersList: React.FC = () => {
         order.customerName.toLowerCase().includes(searchText.toLowerCase())
     );
     const columns = [
-        { key: 'id', title: 'Order ID' },
-        { key: 'customerName', title: 'Customer' },
-        { key: 'date', title: 'Order Date' },
-        { key: 'status', title: 'Status' },
+        { key: 'id', title: 'Mã đơn', align: 'center' },
+        { key: 'customerName', title: 'Khách hàng', align: 'center' },
+        { key: 'date', title: 'Ngày đặt', align: 'center' },
+        { key: 'status', title: 'Trạng thái', align: 'center' },
         {
-            key: 'total', title: 'Total',
-            render: (value: number) => `$${value.toFixed(2)}`
+            key: 'total', title: 'Tổng tiền', align: 'center',
+            render: (value: number) => `${value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}`
+        },
+        {
+            key: 'actions', title: '', align: 'center',
+            render: (_: any, record: any) => renderActions(record)
         }
     ];
 
@@ -81,7 +84,7 @@ const OrdersList: React.FC = () => {
         const status = record.status.toLowerCase();
         const showMoreMenu = status === 'pending';
         return (
-            <div className="actions">
+            <div className="actions" style={{ justifyContent: 'center' }}>
                 <button className="btn-view" onClick={() => { setSelectedOrder(record); setShowOrderModal(true); }}>Xem chi tiết</button>
                 {status === 'pending' && <>
                     <button className="btn-action" onClick={() => { setSelectedOrder(record); setShowStockModal(true); }}>Xem kho</button>
@@ -128,31 +131,24 @@ const OrdersList: React.FC = () => {
 
     return (
         <div className="orders-list-container">
-            <div className="orders-header-flex">
-                <div>
-                    <PageHeader
-                        title="Order Management"
-                        subtitle="View and manage customer orders"
+            <div className="orders-header-flex" style={{ gap: 0, alignItems: 'flex-end' }}>
+                <div className="orders-list-search-row" style={{ flex: 1, marginBottom: 0, marginRight: 24 }}>
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm đơn hàng..."
+                        value={searchText}
+                        onChange={e => setSearchText(e.target.value)}
+                        className="orders-list-search-input"
                     />
                 </div>
-                <div className="export-btn-right">
-                    <button className="primary-button">Export Orders</button>
+                <div className="export-btn-right" style={{ marginTop: 0 }}>
+                    <button className="primary-button">Xuất đơn hàng</button>
                 </div>
-            </div>
-            <div className="orders-list-search-row">
-                <input
-                    type="text"
-                    placeholder="Tìm kiếm đơn hàng..."
-                    value={searchText}
-                    onChange={e => setSearchText(e.target.value)}
-                    className="orders-list-search-input"
-                />
             </div>
             <div className="orders-grid">
                 <DataGrid
                     columns={columns}
                     data={searchedOrders}
-                    actions={renderActions}
                 />
             </div>
             {showStockModal && (
@@ -160,9 +156,9 @@ const OrdersList: React.FC = () => {
                     <div className="modal-stock" onClick={e => e.stopPropagation()}>
                         <h4>Tồn kho sản phẩm</h4>
                         <ul>
-                            <li>Product A: 12 cái</li>
-                            <li>Product B: 5 cái</li>
-                            <li>Product C: 0 cái (hết hàng)</li>
+                            <li>Sản phẩm A: 12 cái</li>
+                            <li>Sản phẩm B: 5 cái</li>
+                            <li>Sản phẩm C: 0 cái (hết hàng)</li>
                         </ul>
                         <button className="btn-action" onClick={() => setShowStockModal(false)}>Đóng</button>
                     </div>
@@ -176,7 +172,7 @@ const OrdersList: React.FC = () => {
                         <div><b>Khách hàng:</b> {selectedOrder.customerName}</div>
                         <div><b>Ngày đặt:</b> {selectedOrder.date}</div>
                         <div><b>Trạng thái:</b> {selectedOrder.status}</div>
-                        <div><b>Tổng tiền:</b> ${selectedOrder.total.toFixed(2)}</div>
+                        <div><b>Tổng tiền:</b> {selectedOrder.total.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</div>
                         <ul style={{ marginTop: '10px' }}>
                             <li>Sản phẩm A: 2 cái</li>
                             <li>Sản phẩm B: 1 cái</li>
