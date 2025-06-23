@@ -19,8 +19,18 @@ const AppRoutes = () => {
             <Route path={ROUTES.AUTH_SUCCESS} element={<AuthSuccess />} />
             <Route path={ROUTES.AUTH_FAILED} element={<AuthFailed />} />
 
-            {/* Route Redirector */}
+            {/* Route Redirector - This route determines where to send the user based on their role */}
             <Route path="/dashboard" element={<RoleBasedRoute />} />
+
+            {/* Debug route to check auth status */}
+            <Route path="/auth-check" element={
+                <div style={{ padding: '20px' }}>
+                    <h1>Authentication Check</h1>
+                    <p>If you can see this, you're logged in</p>
+                    <p>You'll be redirected in 3 seconds...</p>
+                    <RoleBasedRoute />
+                </div>
+            } />
 
             {/* Nested Routes by Role */}
             <Route path="/admin/*" element={<AdminRoutes />} />

@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext } from 'react';
 import type { User, AuthResponse, LoginFormData, RegisterFormData } from '../../../types/auth';
 import { authService } from '../../../services/auth.service';
+import { useMultiAuth } from '../../../hooks/useMultiAuth';
 
 // Define the auth context type
 interface AuthContextType {
@@ -8,11 +9,12 @@ interface AuthContextType {
     isAuthenticated: boolean;
     isLoading: boolean;
     register: (formData: RegisterFormData) => Promise<AuthResponse>;
-    login: (formData: LoginFormData) => Promise<AuthResponse>;
-    logout: () => void;
+    login: (formData: LoginFormData, role?: 'admin' | 'user' | 'staff') => Promise<AuthResponse>;
+    logout: (role?: 'admin' | 'user') => void;
     googleLogin: () => void;
-    setUser: React.Dispatch<React.SetStateAction<User | null>>;
-    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+    switchSession: (role: 'admin' | 'user') => boolean;
+    getActiveSessions: () => string[];
+    activeRole: string | null;
 }
 
 interface AuthProviderProps {
@@ -22,89 +24,32 @@ interface AuthProviderProps {
 // Create context with default values
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const checkLoggedIn = async () => {
-            try {
-                // Check for token in localStorage
-                const token = localStorage.getItem('token');
-
-                // Check for token in URL (from OAuth redirect)
-                const urlParams = new URLSearchParams(window.location.search);
-                const tokenFromUrl = urlParams.get('token');
-
-                // Use token from URL if available, otherwise use from localStorage
-                const activeToken = tokenFromUrl || token;
-
-                if (activeToken) {
-                    // Save token to localStorage if it came from URL
-                    if (tokenFromUrl) {
-                        localStorage.setItem('token', tokenFromUrl);
-                        // Clean up URL
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }
-
-                    // Get user data
-                    const userData = await authService.getCurrentUser();
-                    setUser(userData);
-                    setIsAuthenticated(true);
-                }
-            } catch (error) {
-                console.error('Authentication error:', error);
-                localStorage.removeItem('token');
-            }
-
-            setIsLoading(false);
-        };
-
-        checkLoggedIn();
-    }, []);
+// Export AuthProvider as a named function to maintain consistent component exports for HMR
+export function AuthProvider({ children }: AuthProviderProps) {
+    const {
+        user,
+        isAuthenticated,
+        isLoading,
+        login: multiLogin,
+        register: multiRegister,
+        logout: multiLogout,
+        switchSession,
+        getActiveSessions,
+        activeRole
+    } = useMultiAuth();
 
     // Register user
     const register = async (formData: RegisterFormData): Promise<AuthResponse> => {
-        try {
-            const { token, user } = await authService.register(formData);
-
-            localStorage.setItem('token', token);
-
-            setUser(user);
-            setIsAuthenticated(true);
-            return { success: true };
-        } catch (error: any) {
-            return {
-                success: false,
-                message: error.response?.data?.message || 'Registration failed'
-            };
-        }
-    };
-
-    // Login user
-    const login = async (formData: LoginFormData): Promise<AuthResponse> => {
-        try {
-            const { token, user } = await authService.login(formData);
-
-            localStorage.setItem('token', token);
-
-            setUser(user);
-            setIsAuthenticated(true);
-            return { success: true };
-        } catch (error: any) {
-            return {
-                success: false,
-                message: error.response?.data?.message || 'Login failed'
-            };
-        }
+        return await multiRegister(formData);
+    };    // Login user
+    const login = async (formData: LoginFormData, role: 'admin' | 'user' | 'staff' = 'user'): Promise<AuthResponse> => {
+        // @ts-ignore - We know our multiLogin supports staff role
+        return await multiLogin(formData, role);
     };
 
     // Logout user
-    const logout = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-        setIsAuthenticated(false);
+    const logout = (role?: 'admin' | 'user') => {
+        multiLogout(role);
     };
 
     // Google OAuth login
@@ -123,8 +68,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 login,
                 logout,
                 googleLogin,
-                setUser,
-                setIsAuthenticated,
+                switchSession,
+                getActiveSessions,
+                activeRole
             }}
         >
             {children}

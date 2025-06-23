@@ -1,8 +1,35 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Outlet, Link } from 'react-router-dom';
 import './UserLayout.css';
 
 const UserLayout: React.FC = () => {
+    // Admin portal secret key press counter
+    const [adminKeyPresses, setAdminKeyPresses] = useState(0);
+    const [showAdminLink, setShowAdminLink] = useState(false);
+
+    // Reset key press counter after some time
+    useEffect(() => {
+        if (adminKeyPresses > 0) {
+            const timer = setTimeout(() => {
+                setAdminKeyPresses(0);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [adminKeyPresses]);
+
+    // Secret key press detection for admin portal
+    const handleFooterClick = () => {
+        setAdminKeyPresses(prev => {
+            const newCount = prev + 1;
+            if (newCount >= 5) {
+                setShowAdminLink(true);
+                setTimeout(() => setShowAdminLink(false), 3000);
+                return 0;
+            }
+            return newCount;
+        });
+    };
+
     return (
         <div className="user-layout">
             <header className="user-header">
@@ -46,7 +73,7 @@ const UserLayout: React.FC = () => {
             <main className="user-main">
                 <Outlet />
             </main>
-            <footer className="user-footer">
+            <footer className="user-footer" onClick={handleFooterClick}>
                 <div className="footer-section">
                     <h3>Shop</h3>
                     <ul>
@@ -76,12 +103,23 @@ const UserLayout: React.FC = () => {
                 </div>
                 <div className="footer-section">
                     <h3>Newsletter</h3>
-                    <p>Subscribe to our newsletter to get updates on our latest offers!</p>                    <div className="newsletter-form">
+                    <p>Subscribe to our newsletter to get updates on our latest offers!</p>
+                    <div className="newsletter-form">
                         <input type="email" placeholder="Enter your email" />
                         <button className="btn-primary">Subscribe</button>
                     </div>
                 </div>
             </footer>
+
+            {/* Copyright section with hidden admin access */}
+            <div className="copyright-section" onClick={handleFooterClick}>
+                <p>&copy; {new Date().getFullYear()} Modern E-Commerce. All rights reserved.</p>
+                {showAdminLink && (
+                    <div className="admin-portal-hint">
+                        <Link to="/login?portal=admin">Admin Portal</Link>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

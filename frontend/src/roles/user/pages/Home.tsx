@@ -22,7 +22,7 @@ const Home: React.FC = () => {
                         </div>
                         <div className="card-content">
                             <h3 className="card-title">Men's Clothing</h3>
-                            <a href="/products?category=men" className="btn btn-outline">View All</a>
+                            <a href="/products/category/men" className="btn btn-outline">View All</a>
                         </div>
                     </div>
                     <div className="card">
@@ -31,7 +31,7 @@ const Home: React.FC = () => {
                         </div>
                         <div className="card-content">
                             <h3 className="card-title">Women's Clothing</h3>
-                            <a href="/products?category=women" className="btn btn-outline">View All</a>
+                            <a href="/products/category/women" className="btn btn-outline">View All</a>
                         </div>
                     </div>
                     <div className="card">
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
                         </div>
                         <div className="card-content">
                             <h3 className="card-title">Accessories</h3>
-                            <a href="/products?category=accessories" className="btn btn-outline">View All</a>
+                            <a href="/products/category/accessories" className="btn btn-outline">View All</a>
                         </div>
                     </div>
                     <div className="card">
@@ -49,7 +49,7 @@ const Home: React.FC = () => {
                         </div>
                         <div className="card-content">
                             <h3 className="card-title">Shoes</h3>
-                            <a href="/products?category=shoes" className="btn btn-outline">View All</a>
+                            <a href="/products/category/shoes" className="btn btn-outline">View All</a>
                         </div>
                     </div>
                 </div>
@@ -133,7 +133,7 @@ const Home: React.FC = () => {
                         <div className="card-content text-center">
                             <h2>Summer Sale</h2>
                             <p className="mb-md">Up to 50% off</p>
-                            <a href="/products?sale=true" className="btn btn-outline">Shop Now</a>
+                            <a href="/products" className="btn btn-outline">Shop Now</a>
                         </div>
                     </div>
                 </div>

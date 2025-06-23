@@ -1,7 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../../hooks/useAuth';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
+    const { user, isAuthenticated, activeRole } = useAuth();
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        try {
+            console.log("Admin Dashboard mounted");
+            console.log("Auth state in Admin Dashboard:", {
+                isAuthenticated,
+                activeRole,
+                user: user ? {
+                    id: user.id,
+                    email: user.email,
+                    role: user.role,
+                    displayName: user.displayName
+                } : null
+            });
+        } catch (err) {
+            console.error("Error in Admin Dashboard useEffect:", err);
+            setError("Error loading dashboard data");
+        }
+    }, [isAuthenticated, user, activeRole]);
+
+    if (error) {
+        return (
+            <div className="admin-dashboard error">
+                <h1>Error Loading Dashboard</h1>
+                <p>{error}</p>
+                <p>Please try refreshing the page or logging in again.</p>
+            </div>
+        );
+    }
+
+    if (!user) {
+        return (
+            <div className="admin-dashboard loading">
+                <h1>Loading Dashboard...</h1>
+                <p>Please wait while we load your admin dashboard.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="admin-dashboard">
             <h1>Admin Dashboard</h1>

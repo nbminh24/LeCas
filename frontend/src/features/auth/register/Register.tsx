@@ -21,10 +21,9 @@ const Register = () => {
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const onSubmit = async (e: React.FormEvent) => {
+    }; const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(''); // Clear previous errors
 
         if (!name || !email || !password) {
             setError('Please fill in all fields');
@@ -47,12 +46,17 @@ const Register = () => {
             password,
         };
 
-        const result = await register(newUser);
+        try {
+            const result = await register(newUser);
 
-        if (result.success) {
-            navigate('/dashboard');
-        } else {
-            setError(result.message || 'Registration failed');
+            if (result.success) {
+                navigate('/dashboard');
+            } else {
+                setError(result.message || 'Registration failed');
+            }
+        } catch (error: any) {
+            console.error('Registration error:', error);
+            setError(error.response?.data?.message || 'Registration failed. Please try again.');
         }
     };
 

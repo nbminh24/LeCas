@@ -211,3 +211,34 @@
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     cursor: pointer;
 }
+
+.copyright-section {
+    text-align: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--primary);
+    color: var(--white);
+    font-size: 0.85rem;
+    position: relative;
+}
+
+.admin-portal-hint {
+    position: absolute;
+    right: var(--spacing-lg);
+    bottom: var(--spacing-md);
+    background-color: var(--off-white);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.admin-portal-hint a {
+    color: var(--neutral-dark);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.admin-portal-hint a:hover {
+    color: var(--primary);
+}

@@ -34,13 +34,11 @@ router.post('/register', async (req, res) => {
         });
 
         // Save user to database
-        await newUser.save();
-
-        // Generate JWT token
+        await newUser.save();        // Generate JWT token
         const token = jwt.sign(
             { id: newUser._id, username: newUser.username, role: newUser.role },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '7d' }
         );
 
         res.status(201).json({
@@ -61,23 +59,28 @@ router.post('/register', async (req, res) => {
 // Login user
 router.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
-
-        // Check if user exists
+        const { email, password } = req.body;        // Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Check if user has a password (Google OAuth users might not)
+        if (!user.password) {
+            return res.status(400).json({
+                message: 'This account uses Google Sign-in. Please login with Google.'
+            });
         }
 
         // Verify password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
-        }        // Generate JWT token
+        }// Generate JWT token
         const token = jwt.sign(
             { id: user._id, username: user.username, role: user.role },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '7d' }
         );
 
         res.json({
@@ -118,6 +121,12 @@ router.get('/user', async (req, res) => {
         res.json(user);
     } catch (error) {
         console.error('Get user error:', error);
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Token expired, please login again' });
+        }
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
         res.status(500).json({ message: 'Server error' });
     }
 });
@@ -138,9 +147,8 @@ router.get('/google/callback',
                     id: req.user._id,
                     username: req.user.username || req.user.displayName,
                     role: req.user.role
-                },
-                process.env.JWT_SECRET,
-                { expiresIn: '1h' }
+                }, process.env.JWT_SECRET,
+                { expiresIn: '7d' }
             );
 
             // Redirect to frontend with token

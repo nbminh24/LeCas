@@ -1,22 +1,30 @@
 .admin-layout {
     display: flex;
     height: 100vh;
+    font-family: var(--font-primary);
+    background-color: var(--neutral-light);
 }
 
 .admin-sidebar {
-    width: 250px;
-    background-color: #2c3e50;
-    color: white;
+    width: 280px;
+    background-color: var(--white);
+    color: var(--primary);
     padding: 20px 0;
+    border-right: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    overflow-y: auto;
+    z-index: 10;
 }
 
 .admin-logo {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
-    padding: 10px 0;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--primary);
+    letter-spacing: -0.02em;
 }
 
 .admin-nav ul {
@@ -26,36 +34,53 @@
 }
 
 .admin-nav li {
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .admin-nav a {
     display: block;
-    padding: 10px 20px;
-    color: white;
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: var(--neutral-dark);
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: all var(--transition-fast);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 0 var(--spacing-sm);
 }
 
 .admin-nav a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--off-white);
+    color: var(--primary);
+}
+
+.admin-nav a.active {
+    background-color: var(--off-white);
+    color: var(--primary);
+    font-weight: 600;
+    border-left: 3px solid var(--primary);
 }
 
 .admin-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #f5f7fa;
+    background-color: var(--neutral-light);
+    overflow-y: auto;
 }
 
 .admin-header {
-    background-color: white;
+    background-color: var(--white);
     height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 0 var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .admin-search {
@@ -63,20 +88,36 @@
 }
 
 .admin-search input {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
     outline: none;
     width: 300px;
+    font-family: var(--font-primary);
+    transition: all var(--transition-fast);
+    background-color: var(--off-white);
+}
+
+.admin-search input:focus {
+    border-color: var(--neutral);
+    background-color: var(--white);
+    box-shadow: var(--shadow-input);
 }
 
 .admin-search button {
-    padding: 8px 12px;
-    background-color: #3498db;
-    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--primary);
+    color: var(--white);
     border: none;
-    border-radius: 0 4px 4px 0;
+    border-radius: var(--radius-md);
+    margin-left: var(--spacing-xs);
     cursor: pointer;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.admin-search button:hover {
+    background-color: var(--secondary);
 }
 
 .admin-user {
@@ -86,15 +127,24 @@
 
 .admin-notifications {
     position: relative;
-    margin-right: 20px;
+    margin-right: var(--spacing-lg);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    background-color: var(--off-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.admin-notifications span {
+.admin-notifications:after {
+    content: '5';
     position: absolute;
     top: -5px;
     right: -5px;
-    background-color: #e74c3c;
-    color: white;
+    background-color: var(--primary);
+    color: var(--white);
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -114,10 +164,11 @@
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
+    border: 2px solid var(--off-white);
 }
 
 .admin-main {
     flex: 1;
-    padding: 20px;
+    padding: var(--spacing-lg);
     overflow-y: auto;
 }

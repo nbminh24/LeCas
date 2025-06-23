@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AdminLayout from '../roles/admin/AdminLayout';
 import { ProtectedRoute } from '@features/auth/routes/ProtectedRoute';
-import { ROUTES } from '../constants/routes';
 import { UserRole } from '../constants/routes';
 
 // Import admin pages
@@ -21,6 +20,8 @@ import Reports from '../roles/admin/pages/Reports';
 import Feedback from '../roles/admin/pages/Feedback';
 
 const AdminRoutes = () => {
+    console.log("AdminRoutes component rendering");
+
     return (
         <Routes>
             <Route
@@ -29,19 +30,20 @@ const AdminRoutes = () => {
                 }
             >
                 <Route element={<AdminLayout />}>
-                    <Route path={ROUTES.ADMIN.DASHBOARD} element={<Dashboard />} />
-                    <Route path={ROUTES.ADMIN.PRODUCTS} element={<ManageProducts />} />
-                    <Route path={ROUTES.ADMIN.PRODUCT_DETAIL} element={<ProductDetail />} />
-                    <Route path={ROUTES.ADMIN.PRODUCT_CREATE} element={<ProductCreate />} />
-                    <Route path={ROUTES.ADMIN.PRODUCT_EDIT} element={<ProductEdit />} />
-                    <Route path={ROUTES.ADMIN.USERS} element={<ManageUsers />} />
-                    <Route path={ROUTES.ADMIN.USER_DETAIL} element={<UserDetail />} />
-                    <Route path={ROUTES.ADMIN.ORDERS} element={<ManageOrders />} />
-                    <Route path={ROUTES.ADMIN.ORDER_DETAIL} element={<OrderDetail />} />
-                    <Route path={ROUTES.ADMIN.CATEGORIES} element={<ManageCategories />} />
-                    <Route path={ROUTES.ADMIN.STAFF_MANAGEMENT} element={<StaffManagement />} />
-                    <Route path={ROUTES.ADMIN.REPORTS} element={<Reports />} />
-                    <Route path={ROUTES.ADMIN.FEEDBACK} element={<Feedback />} />
+                    <Route index element={<Dashboard />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="products" element={<ManageProducts />} />
+                    <Route path="products/create" element={<ProductCreate />} />
+                    <Route path="products/edit/:id" element={<ProductEdit />} />
+                    <Route path="products/:id" element={<ProductDetail />} />
+                    <Route path="users" element={<ManageUsers />} />
+                    <Route path="users/:id" element={<UserDetail />} />
+                    <Route path="orders" element={<ManageOrders />} />
+                    <Route path="orders/:id" element={<OrderDetail />} />
+                    <Route path="categories" element={<ManageCategories />} />
+                    <Route path="staff" element={<StaffManagement />} />
+                    <Route path="reports" element={<Reports />} />
+                    <Route path="feedback" element={<Feedback />} />
                 </Route>
             </Route>
         </Routes>

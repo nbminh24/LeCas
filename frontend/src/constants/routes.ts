@@ -56,6 +56,7 @@ export const ROUTES = {
     USER: {
         HOME: '/',
         PRODUCTS: '/products',
+        PRODUCT_CATEGORY: '/products/category/:category',
         PRODUCT_DETAIL: '/products/:id',
         CART: '/cart',
         CHECKOUT: '/checkout',
@@ -64,5 +65,5 @@ export const ROUTES = {
         PROFILE: '/profile',
         WISHLIST: '/wishlist',
         REVIEWS: '/reviews',
-    },
+    }
 };

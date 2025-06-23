@@ -28,6 +28,7 @@ const UserRoutes = () => {
                 <Route element={<UserLayout />}>
                     <Route path={ROUTES.USER.HOME} element={<Home />} />
                     <Route path={ROUTES.USER.PRODUCTS} element={<ProductList />} />
+                    <Route path={ROUTES.USER.PRODUCT_CATEGORY} element={<ProductList />} />
                     <Route path={ROUTES.USER.PRODUCT_DETAIL} element={<ProductDetail />} />
                     <Route path={ROUTES.USER.CART} element={<Cart />} />
                     <Route path={ROUTES.USER.CHECKOUT} element={<Checkout />} />
@@ -37,6 +38,13 @@ const UserRoutes = () => {
                     <Route path={ROUTES.USER.WISHLIST} element={<Wishlist />} />
                     <Route path={ROUTES.USER.REVIEWS} element={<Reviews />} />
                 </Route>
+            </Route>
+
+            {/* Public user-facing routes that don't require login */}
+            <Route element={<UserLayout />}>
+                <Route path="/products" element={<ProductList />} />
+                <Route path="/products/category/:category" element={<ProductList />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
             </Route>
         </Routes>
     );

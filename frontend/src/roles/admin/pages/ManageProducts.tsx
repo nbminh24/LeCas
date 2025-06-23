@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Dashboard.css';
+import './ManageProducts.css';
+import '../../../styles/modern-ecommerce.css';
 
 interface Product {
     id: string;

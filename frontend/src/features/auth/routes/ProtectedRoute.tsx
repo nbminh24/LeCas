@@ -26,25 +26,45 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
+        console.log("ProtectedRoute: User not authenticated, redirecting to login");
         return <Navigate to={redirectPath} replace />;
     }
 
+    console.log("ProtectedRoute: Authentication check", {
+        userRole: user?.role,
+        requiredRole,
+        isAuthenticated,
+        activeSession: user?.id
+    });
+
+    // Check if user exists and has a role
+    if (!user || !user.role) {
+        console.log("ProtectedRoute: User has no role, redirecting to login");
+        return <Navigate to={ROUTES.LOGIN} replace />;
+    }
+
     // Check if a specific role is required and if user has that role
-    if (requiredRole && user && user.role !== requiredRole) {
-        // Redirect to appropriate dashboard based on user's role
-        switch (user.role) {
-            case UserRole.ADMIN:
+    if (requiredRole && user.role !== requiredRole) {
+        console.log(`ProtectedRoute: User role (${user.role}) doesn't match required role (${requiredRole}), redirecting`);
+
+        // Redirect based on user's actual role
+        switch (user.role.toLowerCase()) {
+            case UserRole.ADMIN.toLowerCase():
+                console.log("ProtectedRoute: Redirecting admin to admin dashboard");
                 return <Navigate to={ROUTES.ADMIN.DASHBOARD} replace />;
-            case UserRole.STAFF:
-            case UserRole.STAFF_WAREHOUSE:
-            case UserRole.STAFF_SHIPPING:
+            case UserRole.STAFF_WAREHOUSE.toLowerCase():
+            case UserRole.STAFF_SHIPPING.toLowerCase():
+            case 'staff_order':
+                console.log("ProtectedRoute: Redirecting staff to staff dashboard");
                 return <Navigate to={ROUTES.STAFF.DASHBOARD} replace />;
-            case UserRole.USER:
+            case UserRole.USER.toLowerCase():
             default:
+                console.log("ProtectedRoute: Redirecting user to user dashboard");
                 return <Navigate to={ROUTES.USER.HOME} replace />;
         }
     }
 
-    // Render the protected content
+    // If we get here, the user has the required role (or no role was required)
+    console.log("ProtectedRoute: User has required role, rendering protected content");
     return <Outlet />;
 };

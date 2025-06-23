@@ -4,11 +4,11 @@
  */
 
 :root {
-    /* Color Palette - Elegant black and white */
-    --primary: #000000;
-    /* Pure black for primary elements */
-    --secondary: #111111;
-    /* Almost black for text */
+    /* Color Palette - Elegant black and white with softer contrasts */
+    --primary: #121212;
+    /* Soft black for primary elements - less harsh than pure black */
+    --secondary: #1a1a1a;
+    /* Slightly lighter black for text */
     --accent: #333333;
     /* Dark gray for accents */
     --accent-light: #555555;
@@ -23,11 +23,12 @@
     /* Dark gray for success - keep black & white theme */
     --warning: #666666;
     /* Medium gray for warnings - keep black & white theme */
-    --error: #000000;
-    /* Black for errors - keep black & white theme */
-    --white: #ffffff;
-    --off-white: #fcfcfc;
-    /* Pure white background */
+    --error: #121212;
+    /* Soft black for errors - keep black & white theme */
+    --white: #fafafa;
+    /* Slightly off-white - easier on the eyes */
+    --off-white: #f5f5f5;
+    /* Slightly darker off-white background */
     --subtle-accent: #f5f5f5;
     /* Very light gray for subtle accents */
     --border-color: #e5e5e5;
@@ -45,20 +46,19 @@
     --spacing-xl: 32px;
     --spacing-xxl: 64px;
     /* Increased for more elegant whitespace */
+    /* Border Radius - iOS inspired elegant rounded corners */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 22px;
+    /* More rounded corners for iOS-like elegant feel */
 
-    /* Border Radius - more refined, minimal */
-    --radius-sm: 2px;
-    --radius-md: 4px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-    /* More subtle corners for elegant feel */
-
-    /* Shadows - subtle with higher contrast for elegant feel */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-    --shadow-input: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+    /* Shadows - iOS inspired with subtle depth */
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.15);
+    --shadow-input: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.08);
     /* Refined shadows for sophisticated look */
 
     /* Transitions */
@@ -68,12 +68,12 @@
     /* Special Effects */
     --backdrop-blur: blur(15px);
     --glass-background: rgba(255, 255, 255, 0.7);
-
-    /* Button styles */
+    /* Button styles - iOS inspired */
     --btn-padding-x: 24px;
     --btn-padding-y: 12px;
-    --btn-radius: 0;
-    /* Sharp corners for modern look */
+    --btn-radius: var(--radius-md);
+    /* Rounded corners for iOS-like elegant look */
+    --btn-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
     --btn-focus-width: 2px;
 
     /* Container widths */
@@ -173,27 +173,32 @@ button {
     padding: var(--spacing-lg);
     border: none;
     transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    margin-bottom: var(--spacing-md);
 }
 
 .ios-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
 
 /* iOS-inspired button */
 .ios-button {
-    background-color: var(--accent);
+    background-color: var(--primary);
     color: var(--white);
     font-weight: 600;
     border: none;
     border-radius: var(--radius-md);
     padding: var(--spacing-md) var(--spacing-lg);
     min-height: 48px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--btn-shadow);
     transition: all var(--transition-fast);
     text-align: center;
     font-size: 1rem;
     letter-spacing: -0.01em;
+    position: relative;
+    overflow: hidden;
 }
 
 .ios-button:hover {

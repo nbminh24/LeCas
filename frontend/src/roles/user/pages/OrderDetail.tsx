@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './OrderDetail.css';
+import '../../../styles/modern-ecommerce.css';
 
-// Define the Order type
+// Define the Order type based on our backend model
 interface OrderItem {
-    productId: string;
-    name: string;
+    product: {
+        id: string;
+        name: string;
+        imageUrl: string;
+    };
     price: number;
     quantity: number;
-    imageUrl?: string;
 }
 
 interface Order {
     _id: string;
     orderNumber: string;
-    date: string;
+    createdAt: string;
     status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-    total: number;
-    items: OrderItem[];
+    totalAmount: number;
+    products: OrderItem[];
     shippingAddress: {
         street: string;
         city: string;
@@ -25,33 +28,12 @@ interface Order {
         zipCode: string;
         country: string;
     };
-    paymentMethod: {
-        cardType: string;
-        lastFourDigits: string;
-    };
+    paymentMethod: string;
+    paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
     trackingNumber?: string;
-    estimatedDelivery?: string;
+    shippingFee: number;
+    notes?: string;
 }
-
-// Helper function to generate tracking info based on status
-const getTrackingInfo = (status: Order['status']) => {
-    switch (status) {
-        case 'shipped':
-            return {
-                trackingNumber: 'TRK12345678',
-                estimatedDelivery: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-                carrier: 'FedEx'
-            };
-        case 'delivered':
-            return {
-                trackingNumber: 'TRK87654321',
-                deliveredDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-                carrier: 'UPS'
-            };
-        default:
-            return null;
-    }
-};
 
 const OrderDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -67,55 +49,68 @@ const OrderDetail: React.FC = () => {
                 // const response = await api.get(`/orders/${id}`);
                 // setOrder(response.data);
 
-                // Mock data for demonstration
+                // Mock data for demonstration based on our backend model
                 setTimeout(() => {
-                    // Create a mock order based on the id parameter
                     const mockOrder: Order = {
                         _id: id || '1',
-                        orderNumber: `ORD-2023-${id}`,
-                        date: '2023-11-15T10:30:00Z',
-                        status: 'shipped',
-                        total: 134.99,
-                        items: [
+                        orderNumber: `ORD-${id?.substring(0, 8)}`,
+                        createdAt: new Date().toISOString(),
+                        status: 'processing',
+                        totalAmount: 289.97,
+                        products: [
                             {
-                                productId: 'p1',
-                                name: 'Wireless Headphones',
-                                price: 79.99,
-                                quantity: 1,
-                                imageUrl: 'https://via.placeholder.com/150'
+                                product: {
+                                    id: 'p1',
+                                    name: 'Elegant Black Coat',
+                                    imageUrl: 'https://via.placeholder.com/500x700?text=Black+Coat'
+                                },
+                                price: 75.00,
+                                quantity: 1
                             },
                             {
-                                productId: 'p2',
-                                name: 'Phone Case',
-                                price: 24.99,
-                                quantity: 1,
-                                imageUrl: 'https://via.placeholder.com/150'
+                                product: {
+                                    id: 'p2',
+                                    name: 'Modern Black Dress',
+                                    imageUrl: 'https://via.placeholder.com/500x700?text=Black+Dress'
+                                },
+                                price: 90.00,
+                                quantity: 1
                             },
                             {
-                                productId: 'p3',
-                                name: 'USB-C Cable',
-                                price: 14.99,
-                                quantity: 2,
-                                imageUrl: 'https://via.placeholder.com/150'
+                                product: {
+                                    id: 'p3',
+                                    name: 'Premium White Shirt',
+                                    imageUrl: 'https://via.placeholder.com/500x700?text=White+Shirt'
+                                },
+                                price: 70.00,
+                                quantity: 1
+                            },
+                            {
+                                product: {
+                                    id: 'p4',
+                                    name: 'Black Leather Jacket',
+                                    imageUrl: 'https://via.placeholder.com/500x700?text=Black+Leather+Jacket'
+                                },
+                                price: 54.97,
+                                quantity: 1
                             }
                         ],
                         shippingAddress: {
-                            street: '123 Main St',
-                            city: 'Anytown',
-                            state: 'CA',
+                            street: '123 Elegant Street',
+                            city: 'Fashion City',
+                            state: 'FC',
                             zipCode: '90210',
-                            country: 'USA'
+                            country: 'United States'
                         },
-                        paymentMethod: {
-                            cardType: 'Visa',
-                            lastFourDigits: '4242'
-                        },
-                        ...getTrackingInfo('shipped')
+                        paymentMethod: 'credit_card',
+                        paymentStatus: 'paid',
+                        trackingNumber: 'TRK' + Math.floor(Math.random() * 10000000),
+                        shippingFee: 0
                     };
 
                     setOrder(mockOrder);
                     setLoading(false);
-                }, 1000);
+                }, 800);
             } catch (error) {
                 console.error('Error fetching order details:', error);
                 setLoading(false);
@@ -151,115 +146,194 @@ const OrderDetail: React.FC = () => {
         }
     };
 
+    // Function to format payment method display
+    const formatPaymentMethod = (method: string): string => {
+        switch (method) {
+            case 'credit_card': return 'Credit Card';
+            case 'paypal': return 'PayPal';
+            case 'bank_transfer': return 'Bank Transfer';
+            default: return method;
+        }
+    };
+
+    // Function to get estimated delivery date
+    const getEstimatedDelivery = (status: Order['status'], createdAt: string): string => {
+        const orderDate = new Date(createdAt);
+
+        // Add days based on status
+        switch (status) {
+            case 'pending':
+                orderDate.setDate(orderDate.getDate() + 7);
+                break;
+            case 'processing':
+                orderDate.setDate(orderDate.getDate() + 5);
+                break;
+            case 'shipped':
+                orderDate.setDate(orderDate.getDate() + 3);
+                break;
+            case 'delivered':
+                return 'Delivered';
+            case 'cancelled':
+                return 'Cancelled';
+        }
+
+        return formatDate(orderDate.toISOString());
+    };
+
     if (loading) {
-        return <div className="loading-indicator">Loading order details...</div>;
+        return <div className="order-loading">Loading order details...</div>;
     }
 
     if (!order) {
         return (
-            <div className="error-container">
+            <div className="order-not-found">
                 <h2>Order Not Found</h2>
                 <p>We couldn't find the order you're looking for. Please check your order number and try again.</p>
-                <Link to="/user/orders" className="back-button">Back to Orders</Link>
+                <Link to="/orders" className="btn-outline">Back to Orders</Link>
             </div>
         );
     }
 
+    // Calculate subtotal (total - shipping)
+    const subtotal = order.totalAmount - order.shippingFee;
+    // Assuming tax is 10% of subtotal for demonstration purposes
+    const tax = subtotal * 0.1;
+
     return (
         <div className="order-detail-container">
             <div className="order-detail-header">
-                <div>
+                <div className="order-title">
                     <h1>Order #{order.orderNumber}</h1>
-                    <p className="order-date">Placed on {formatDate(order.date)}</p>
+                    <p>Placed on {formatDate(order.createdAt)}</p>
                 </div>
-                <Link to="/user/orders" className="back-button">Back to Orders</Link>
+                <Link to="/orders" className="btn-outline">Back to Orders</Link>
             </div>
 
-            <div className="order-status-section">
-                <div className={`status-badge large ${getStatusBadgeClass(order.status)}`}>
-                    {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                </div>
-                {(order.status === 'shipped' || order.status === 'delivered') && (
-                    <div className="tracking-info">
-                        <p>
-                            <strong>Tracking Number:</strong> {order.trackingNumber}
-                            {order.status === 'shipped' && (
-                                <span> (Estimated delivery: {
-                                    formatDate(order.estimatedDelivery || '')
-                                })</span>
-                            )}
-                        </p>
+            <div className="order-status-panel">
+                <div className="status-section">
+                    <div className={`status-badge ${getStatusBadgeClass(order.status)}`}>
+                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </div>
-                )}
-            </div>
-
-            <div className="order-sections-grid">
-                <div className="order-items-section">
-                    <h2>Items</h2>
-                    <div className="order-items-list">
-                        {order.items.map((item, index) => (
-                            <div key={index} className="order-detail-item">
-                                <div className="item-image">
-                                    <img src={item.imageUrl || 'https://via.placeholder.com/100'} alt={item.name} />
-                                </div>
-                                <div className="item-details">
-                                    <h3>{item.name}</h3>
-                                    <p className="item-price">${item.price.toFixed(2)}</p>
-                                    <p className="item-quantity">Quantity: {item.quantity}</p>
-                                </div>
-                                <div className="item-total">
-                                    ${(item.price * item.quantity).toFixed(2)}
-                                </div>
+                    <div className="status-info">
+                        <div className="status-detail">
+                            <span>Payment Status</span>
+                            <span className={`payment-status ${order.paymentStatus}`}>
+                                {order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1)}
+                            </span>
+                        </div>
+                        <div className="status-detail">
+                            <span>Estimated Delivery</span>
+                            <span>{getEstimatedDelivery(order.status, order.createdAt)}</span>
+                        </div>
+                        {order.trackingNumber && (order.status === 'shipped' || order.status === 'delivered') && (
+                            <div className="status-detail">
+                                <span>Tracking Number</span>
+                                <span className="tracking-number">{order.trackingNumber}</span>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
+                <div className="order-timeline">
+                    <div className={`timeline-step ${order.status !== 'cancelled' ? 'completed' : 'cancelled'}`}>
+                        <div className="step-marker"></div>
+                        <div className="step-label">Order Placed</div>
+                    </div>
+                    <div className={`timeline-step ${order.status === 'processing' || order.status === 'shipped' || order.status === 'delivered' ? 'completed' : (order.status === 'cancelled' ? 'cancelled' : '')}`}>
+                        <div className="step-marker"></div>
+                        <div className="step-label">Processing</div>
+                    </div>
+                    <div className={`timeline-step ${order.status === 'shipped' || order.status === 'delivered' ? 'completed' : (order.status === 'cancelled' ? 'cancelled' : '')}`}>
+                        <div className="step-marker"></div>
+                        <div className="step-label">Shipped</div>
+                    </div>
+                    <div className={`timeline-step ${order.status === 'delivered' ? 'completed' : (order.status === 'cancelled' ? 'cancelled' : '')}`}>
+                        <div className="step-marker"></div>
+                        <div className="step-label">Delivered</div>
+                    </div>
+                </div>
+            </div>
 
-                <div className="order-info-sections">
-                    <div className="order-info-section">
-                        <h2>Shipping Address</h2>
-                        <div className="address-info">
-                            <p>{order.shippingAddress.street}</p>
-                            <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}</p>
-                            <p>{order.shippingAddress.country}</p>
+            <div className="order-content">
+                <div className="order-details">
+                    <div className="order-items">
+                        <h2>Order Items</h2>
+                        <div className="items-list">
+                            {order.products.map((item, index) => (
+                                <div key={index} className="order-item">
+                                    <div className="item-image">
+                                        <img src={item.product.imageUrl} alt={item.product.name} />
+                                    </div>
+                                    <div className="item-details">
+                                        <h3>{item.product.name}</h3>
+                                        <div className="item-meta">
+                                            <span className="item-price">${item.price.toFixed(2)}</span>
+                                            <span className="item-quantity">Qty: {item.quantity}</span>
+                                        </div>
+                                    </div>
+                                    <div className="item-total">
+                                        ${(item.price * item.quantity).toFixed(2)}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="order-info-section">
-                        <h2>Payment Information</h2>
-                        <div className="payment-info">
-                            <p>{order.paymentMethod.cardType} ending in {order.paymentMethod.lastFourDigits}</p>
+                    <div className="order-info-panels">
+                        <div className="info-panel">
+                            <h2>Shipping Address</h2>
+                            <div className="address-info">
+                                <p>{order.shippingAddress.street}</p>
+                                <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}</p>
+                                <p>{order.shippingAddress.country}</p>
+                            </div>
+                        </div>
+
+                        <div className="info-panel">
+                            <h2>Payment Method</h2>
+                            <div className="payment-info">
+                                <p>{formatPaymentMethod(order.paymentMethod)}</p>
+                                {order.paymentStatus === 'paid' && (
+                                    <span className="payment-badge paid">Paid</span>
+                                )}
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div className="order-info-section">
-                        <h2>Order Summary</h2>
-                        <div className="order-summary">
-                            <div className="summary-row">
-                                <span>Subtotal</span>
-                                <span>${(order.total * 0.9).toFixed(2)}</span>
-                            </div>
-                            <div className="summary-row">
-                                <span>Tax</span>
-                                <span>${(order.total * 0.1).toFixed(2)}</span>
-                            </div>
-                            <div className="summary-row">
-                                <span>Shipping</span>
-                                <span>Free</span>
-                            </div>
-                            <div className="summary-row total">
-                                <span>Total</span>
-                                <span>${order.total.toFixed(2)}</span>
-                            </div>
+                <div className="order-summary">
+                    <h2>Order Summary</h2>
+                    <div className="summary-details">
+                        <div className="summary-row">
+                            <span>Subtotal</span>
+                            <span>${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-row">
+                            <span>Tax</span>
+                            <span>${tax.toFixed(2)}</span>
+                        </div>
+                        <div className="summary-row">
+                            <span>Shipping</span>
+                            <span>{order.shippingFee > 0 ? `$${order.shippingFee.toFixed(2)}` : 'Free'}</span>
+                        </div>
+                        <div className="summary-divider"></div>
+                        <div className="summary-row total">
+                            <span>Total</span>
+                            <span>${order.totalAmount.toFixed(2)}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div className="order-actions">
-                <button className="action-button secondary">Need Help?</button>
-                {order.status !== 'cancelled' && order.status !== 'delivered' && (
-                    <button className="action-button danger">Cancel Order</button>
+                {(order.status === 'pending' || order.status === 'processing') && (
+                    <button className="btn-danger">Cancel Order</button>
+                )}
+                <button className="btn-secondary">Contact Support</button>
+                {order.status === 'delivered' && (
+                    <button className="btn-primary">Write a Review</button>
+                )}
+                {(order.status === 'shipped' || order.status === 'delivered') && (
+                    <button className="btn-primary">Track Shipment</button>
                 )}
             </div>
         </div>

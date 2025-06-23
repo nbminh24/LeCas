@@ -31,7 +31,18 @@ api.interceptors.response.use(
     (error) => {
         // Handle authentication errors
         if (error.response && error.response.status === 401) {
+            // Check which token to remove
+            const currentToken = localStorage.getItem('token');
+            if (currentToken === localStorage.getItem('admin_token')) {
+                localStorage.removeItem('admin_token');
+            }
+            if (currentToken === localStorage.getItem('user_token')) {
+                localStorage.removeItem('user_token');
+            }
             localStorage.removeItem('token');
+
+            // You could also trigger a global auth state refresh here
+            // or redirect to login page
         }
         return Promise.reject(error);
     }

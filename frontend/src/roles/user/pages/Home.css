@@ -35,16 +35,16 @@
 .hero-btn {
     display: inline-block;
     padding: 12px 30px;
-    background-color: #3498db;
-    color: white;
+    background-color: var(--primary);
+    color: var(--white);
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: 500;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-fast);
 }
 
 .hero-btn:hover {
-    background-color: #2980b9;
+    background-color: var(--secondary);
 }
 
 /* Featured Categories */
@@ -218,17 +218,17 @@
 .add-to-cart-btn {
     width: 100%;
     padding: 10px;
-    background-color: #3498db;
-    color: white;
+    background-color: var(--primary);
+    color: var(--white);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-fast);
 }
 
 .add-to-cart-btn:hover {
-    background-color: #2980b9;
+    background-color: var(--secondary);
 }
 
 .view-all-products {
@@ -239,18 +239,18 @@
 .view-all-btn {
     display: inline-block;
     padding: 12px 30px;
-    background-color: #f8f9fa;
-    border: 1px solid #3498db;
-    color: #3498db;
+    background-color: var(--white);
+    border: 1px solid var(--primary);
+    color: var(--primary);
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     font-weight: 500;
-    transition: all 0.2s;
+    transition: all var(--transition-fast);
 }
 
 .view-all-btn:hover {
-    background-color: #3498db;
-    color: white;
+    background-color: var(--primary);
+    color: var(--white);
 }
 
 /* Promotional Banners */
@@ -359,15 +359,15 @@
 
 .newsletter-form button {
     padding: 12px 25px;
-    background-color: #3498db;
-    color: white;
+    background-color: var(--primary);
+    color: var(--white);
     border: none;
-    border-radius: 0 4px 4px 0;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-fast);
 }
 
 .newsletter-form button:hover {
-    background-color: #2980b9;
+    background-color: var(--secondary);
 }
