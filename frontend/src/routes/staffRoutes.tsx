@@ -1,72 +1,82 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import StaffLayout from '../roles/staff/StaffLayout';
 import { ProtectedRoute } from '@features/auth/routes/ProtectedRoute';
-import { ROUTES } from '../constants/routes';
 import { UserRole } from '../constants/routes';
 
-// Import staff pages
+// Staff Order pages
 import Dashboard from '../roles/staff/pages/Dashboard';
-import OrdersList from '../roles/staff/pages/OrdersList';
-import OrderDetail from '../roles/staff/pages/OrderDetail';
-import SearchOrders from '../roles/staff/pages/SearchOrders';
+import OrdersList from '../roles/staff/subroles/orders/OrdersList';
+import OrderDetails from '../roles/staff/subroles/orders/OrderDetails';
 
-// Import warehouse pages
+// Staff Warehouse pages
 import Inventory from '../roles/staff/subroles/warehouse/Inventory';
 import InventoryDetail from '../roles/staff/subroles/warehouse/InventoryDetail';
 import UpdateStock from '../roles/staff/subroles/warehouse/UpdateStock';
 
-// Import shipping pages
+// Staff Shipping pages
 import Shipments from '../roles/staff/subroles/shipping/Shipments';
 import ShipmentDetail from '../roles/staff/subroles/shipping/ShipmentDetail';
 import UpdateShipment from '../roles/staff/subroles/shipping/UpdateShipment';
 
 const StaffRoutes = () => {
-    return (
-        <Routes>
-            <Route
-                element={
-                    <ProtectedRoute requiredRole={UserRole.STAFF} />
-                }
-            >
-                <Route element={<StaffLayout />}>
-                    {/* Main staff routes */}
-                    <Route path={ROUTES.STAFF.DASHBOARD} element={<Dashboard />} />
-                    <Route path={ROUTES.STAFF.ORDERS} element={<OrdersList />} />
-                    <Route path={ROUTES.STAFF.ORDER_DETAIL} element={<OrderDetail />} />
-                    <Route path={ROUTES.STAFF.SEARCH_ORDERS} element={<SearchOrders />} />
+    const { user } = useAuth();
 
-                    {/* Warehouse staff routes */}
-                    <Route
-                        path={ROUTES.STAFF.WAREHOUSE.INVENTORY}
-                        element={<Inventory />}
-                    />
-                    <Route
-                        path={ROUTES.STAFF.WAREHOUSE.INVENTORY_DETAIL}
-                        element={<InventoryDetail />}
-                    />
-                    <Route
-                        path={ROUTES.STAFF.WAREHOUSE.UPDATE_STOCK}
-                        element={<UpdateStock />}
-                    />
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
 
-                    {/* Shipping staff routes */}
-                    <Route
-                        path={ROUTES.STAFF.SHIPPING.SHIPMENTS}
-                        element={<Shipments />}
-                    />
-                    <Route
-                        path={ROUTES.STAFF.SHIPPING.SHIPMENT_DETAIL}
-                        element={<ShipmentDetail />}
-                    />
-                    <Route
-                        path={ROUTES.STAFF.SHIPPING.UPDATE_SHIPMENT}
-                        element={<UpdateShipment />}
-                    />
-                </Route>
-            </Route>
-        </Routes>
-    );
+    // Render routes based on staff type
+    switch (user.role) {
+        case UserRole.STAFF_ORDER:
+            return (
+                <Routes>
+                    <Route element={<StaffLayout />}>
+                        <Route element={<ProtectedRoute requiredRole={UserRole.STAFF_ORDER} />}>                            <Route index element={<Dashboard />} />
+                            <Route path="dashboard" element={<Dashboard />} />
+                            <Route path="orders" element={<OrdersList />} />
+                            <Route path="orders/:id" element={<OrderDetails />} />
+                        </Route>
+                    </Route>
+                </Routes>
+            );
+
+        case UserRole.STAFF_WAREHOUSE:
+            return (
+                <Routes>
+                    <Route element={<StaffLayout />}>
+                        <Route element={<ProtectedRoute requiredRole={UserRole.STAFF_WAREHOUSE} />}>
+                            <Route index element={<Inventory />} />
+                            <Route path="dashboard" element={<Dashboard />} />
+                            <Route path="warehouse/inventory" element={<Inventory />} />
+                            <Route path="warehouse/inventory/:id" element={<InventoryDetail />} />
+                            <Route path="warehouse/update-stock/:id" element={<UpdateStock />} />
+                        </Route>
+                    </Route>
+                </Routes>
+            );
+
+        case UserRole.STAFF_SHIPPING:
+            return (
+                <Routes>
+                    <Route element={<StaffLayout />}>
+                        <Route element={<ProtectedRoute requiredRole={UserRole.STAFF_SHIPPING} />}>
+                            <Route index element={<Shipments />} />
+                            <Route path="dashboard" element={<Dashboard />} />
+                            <Route path="shipping/shipments" element={<Shipments />} />
+                            <Route path="shipping/shipments/:id" element={<ShipmentDetail />} />
+                            <Route path="shipping/update/:id" element={<UpdateShipment />} />
+                        </Route>
+                    </Route>
+                </Routes>
+            );
+
+        default:
+            // If somehow a non-staff user gets here, redirect them to login
+            console.log('Non-staff user attempted to access staff routes');
+            return <Navigate to="/login" replace />;
+    }
 };
 
 export default StaffRoutes;

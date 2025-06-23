@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { User, LoginFormData, RegisterFormData, AuthResponse } from '../types/auth';
 import { authService } from '../services/auth.service';
+import { UserRole } from '../constants/routes';
 
 export interface UserSession {
     user: User | null;
@@ -8,356 +9,204 @@ export interface UserSession {
     role: string | null;
 }
 
-// This hook allows for multiple user sessions (admin, staff, and regular user)
 export const useMultiAuth = () => {
-    // Store sessions for different user roles
     const [sessions, setSessions] = useState<Record<string, UserSession>>({
-        admin: { user: null, token: null, role: 'admin' },
-        user: { user: null, token: null, role: 'user' },
-        staff_warehouse: { user: null, token: null, role: 'staff_warehouse' },
-        staff_shipping: { user: null, token: null, role: 'staff_shipping' },
-        staff_order: { user: null, token: null, role: 'staff_order' },
+        admin: { user: null, token: null, role: UserRole.ADMIN },
+        user: { user: null, token: null, role: UserRole.USER },
+        staff_warehouse: { user: null, token: null, role: UserRole.STAFF_WAREHOUSE },
+        staff_shipping: { user: null, token: null, role: UserRole.STAFF_SHIPPING },
+        staff_order: { user: null, token: null, role: UserRole.STAFF_ORDER },
     });
 
-    // Current active session
     const [activeSession, setActiveSession] = useState<string | null>(null);
-
-    // Loading state
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // Get the current user from the active session
     const user = activeSession ? sessions[activeSession]?.user : null;
+    const isAuthenticated = !!user;
 
-    // Check if authenticated
-    const isAuthenticated = !!user; useEffect(() => {
+    useEffect(() => {
         const checkLoggedIn = async () => {
             try {
                 console.log("Checking authentication state...");
+                const storedToken = localStorage.getItem('token');
 
-                // Check for admin token
-                const adminToken = localStorage.getItem('admin_token'); if (adminToken) {
-                    try {
-                        console.log("Admin token found, validating...");
-                        // Set token temporarily to fetch admin user
-                        localStorage.setItem('token', adminToken);
-                        const adminUser = await authService.getCurrentUser();
+                if (!storedToken) {
+                    setIsLoading(false);
+                    return;
+                }
 
-                        // Check if user exists and has admin role
-                        if (adminUser) {
-                            console.log("Admin token user data:", adminUser);
+                const currentUser = await authService.getCurrentUser();
+                if (!currentUser) {
+                    setIsLoading(false);
+                    return;
+                }
 
-                            if (adminUser.role === 'admin') {
-                                console.log("Admin user validated");
-                                setSessions(prev => ({
-                                    ...prev,
-                                    admin: { user: adminUser, token: adminToken, role: 'admin' }
-                                }));
+                console.log("User data retrieved:", { role: currentUser.role });
 
-                                // Set as active if no other session is active
-                                if (!activeSession) {
-                                    console.log("Setting admin as active session");
-                                    setActiveSession('admin');
-                                }
-                            } else {
-                                console.warn("User with admin token does not have admin role:", adminUser.role);
-                                localStorage.removeItem('admin_token');
-                            }
-                        } else {
-                            console.warn("No user data returned for admin token");
-                            localStorage.removeItem('admin_token');
-                        }
-                    } catch (error: any) {
-                        console.error('Admin authentication error:', error);
-                        // Clear admin token if there's an auth error (expired, invalid, etc.)
-                        localStorage.removeItem('admin_token');
-                        setSessions(prev => ({
-                            ...prev,
-                            admin: { user: null, token: null, role: 'admin' }
-                        }));
+                let sessionType: string;
+                switch (currentUser.role.toLowerCase()) {
+                    case UserRole.ADMIN.toLowerCase():
+                        sessionType = 'admin';
+                        localStorage.setItem('admin_token', storedToken);
+                        break;
+                    case UserRole.STAFF_WAREHOUSE.toLowerCase():
+                        sessionType = 'staff_warehouse';
+                        localStorage.setItem('staff_token', storedToken);
+                        break;
+                    case UserRole.STAFF_SHIPPING.toLowerCase():
+                        sessionType = 'staff_shipping';
+                        localStorage.setItem('staff_token', storedToken);
+                        break;
+                    case UserRole.STAFF_ORDER.toLowerCase():
+                        sessionType = 'staff_order';
+                        localStorage.setItem('staff_token', storedToken);
+                        break;
+                    case UserRole.USER.toLowerCase():
+                        sessionType = 'user';
+                        localStorage.setItem('user_token', storedToken);
+                        break;
+                    default:
+                        sessionType = 'user';
+                        localStorage.setItem('user_token', storedToken);
+                }
+
+                setSessions(prev => ({
+                    ...prev,
+                    [sessionType]: {
+                        user: currentUser,
+                        token: storedToken,
+                        role: currentUser.role
                     }
-                }
+                }));
 
-                // Check for user token
-                const userToken = localStorage.getItem('user_token');
-                if (userToken) {
-                    try {
-                        console.log("User token found, validating...");
-                        // Set token temporarily to fetch user
-                        localStorage.setItem('token', userToken);
-                        const regularUser = await authService.getCurrentUser();
-
-                        if (regularUser && regularUser.role === 'user') {
-                            console.log("Regular user validated");
-                            setSessions(prev => ({
-                                ...prev,
-                                user: { user: regularUser, token: userToken, role: 'user' }
-                            }));
-
-                            // Set as active if no other session is active or if admin is not active
-                            if (!activeSession || activeSession === 'admin' && !sessions.admin.user) {
-                                setActiveSession('user');
-                            }
-                        }
-                    } catch (error: any) {
-                        console.error('User authentication error:', error);
-                        // Clear user token if there's an auth error (expired, invalid, etc.)
-                        localStorage.removeItem('user_token');
-                        setSessions(prev => ({
-                            ...prev,
-                            user: { user: null, token: null, role: 'user' }
-                        }));
-                    }
-                }
-
-                // Check for staff tokens - could be a single token or separate tokens per staff role
-                const staffToken = localStorage.getItem('staff_token');
-                if (staffToken) {
-                    try {
-                        console.log("Staff token found, validating...");
-                        // Set token temporarily to fetch staff user
-                        localStorage.setItem('token', staffToken);
-                        const staffUser = await authService.getCurrentUser();
-
-                        // Check which type of staff and update the appropriate session
-                        if (staffUser) {
-                            console.log("Staff user validated:", staffUser.role);
-
-                            if (staffUser.role === 'staff_warehouse' ||
-                                staffUser.role === 'staff_shipping' ||
-                                staffUser.role === 'staff_order') {
-
-                                setSessions(prev => ({
-                                    ...prev,
-                                    [staffUser.role]: {
-                                        user: staffUser,
-                                        token: staffToken,
-                                        role: staffUser.role
-                                    }
-                                }));
-
-                                // Set as active if no other session is active
-                                if (!activeSession ||
-                                    (activeSession === 'admin' && !sessions.admin.user) ||
-                                    (activeSession === 'user' && !sessions.user.user)) {
-                                    setActiveSession(staffUser.role);
-                                }
-                            }
-                        }
-                    } catch (error: any) {
-                        console.error('Staff authentication error:', error);
-                        // Clear staff token if there's an auth error
-                        localStorage.removeItem('staff_token');
-                        // Reset all staff sessions
-                        setSessions(prev => ({
-                            ...prev,
-                            staff_warehouse: { user: null, token: null, role: 'staff_warehouse' },
-                            staff_shipping: { user: null, token: null, role: 'staff_shipping' },
-                            staff_order: { user: null, token: null, role: 'staff_order' }
-                        }));
-                    }
-                }
-
-                // Set the token for the active session back to localStorage
-                if (activeSession && sessions[activeSession]?.token) {
-                    localStorage.setItem('token', sessions[activeSession].token!);
-                } else {
-                    localStorage.removeItem('token');
-                }
+                setActiveSession(sessionType);
+                console.log(`Set active session to ${sessionType}`);
             } catch (error) {
-                console.error('Authentication error:', error);
+                console.error('Error checking authentication:', error);
+                localStorage.removeItem('token');
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('user_token');
+                localStorage.removeItem('staff_token');
+            } finally {
+                setIsLoading(false);
             }
-
-            setIsLoading(false);
         };
 
         checkLoggedIn();
-    }, []);    // Login user
-    const login = async (formData: LoginFormData, role: 'admin' | 'user' | 'staff' = 'user'): Promise<AuthResponse> => {
+    }, []);
+
+    const login = async (formData: LoginFormData, _role: string = 'user'): Promise<AuthResponse> => {
         try {
-            console.log(`Attempting to login as ${role}`);
-            const { token, user } = await authService.login(formData);
-            console.log("Login successful, user data:", user);
+            const response = await authService.login(formData);
+            console.log('Login response received');
 
-            // More detailed role checking for admin users
-            if (role === 'admin') {
-                console.log("Admin login attempt, checking role:", user.role);
-                if (user.role !== 'admin') {
-                    console.error("Account does not have admin role:", user.role);
-                    return {
-                        success: false,
-                        message: 'Account does not have admin privileges'
-                    };
-                }
-
-                console.log("Admin login confirmed, setting admin_token");
+            if (!response.token || !response.user) {
+                throw new Error('Invalid response from login');
             }
 
-            // For staff login attempt, we need to check if they're any type of staff
-            if (role === 'staff') {
-                if (!user.role.startsWith('staff_')) {
-                    return {
-                        success: false,
-                        message: 'Account does not have staff privileges'
-                    };
-                }
+            const { token, user } = response;
+            console.log('Processing login for user:', user.role);
 
-                // Store token as staff token
-                localStorage.setItem('staff_token', token);
-
-                // Also store as the specific staff role token
-                localStorage.setItem(`${user.role}_token`, token);
-
-                // Also set as current token
-                localStorage.setItem('token', token);
-
-                // Update session for the specific staff role
-                setSessions(prev => ({
-                    ...prev,
-                    [user.role]: { user, token, role: user.role }
-                }));
-
-                // Set as active session
-                setActiveSession(user.role);
-
-                return { success: true };
-            }
-
-            // For regular user login attempt
-            if (role === 'user' && user.role !== 'user') {
-                // If they're an admin trying to login as a user, let them know
-                if (user.role === 'admin') {
-                    return {
-                        success: false,
-                        message: 'Please use the admin login'
-                    };
-                }
-
-                // If they're staff trying to login as a user, let them know
-                if (user.role.startsWith('staff_')) {
-                    return {
-                        success: false,
-                        message: 'Please use the staff login'
-                    };
-                }
-
-                return {
-                    success: false,
-                    message: 'Invalid role for this login'
-                };
-            }
-
-            // Store token based on role
-            localStorage.setItem(`${role}_token`, token);
-
-            // Also set as current token
             localStorage.setItem('token', token);
 
-            // Update session
+            const sessionType = user.role.toLowerCase();
             setSessions(prev => ({
                 ...prev,
-                [role]: { user, token, role }
+                [sessionType]: { user, token, role: user.role }
             }));
 
-            // Set as active session
-            setActiveSession(role);
+            setActiveSession(sessionType);
+            console.log(`Login successful, session type: ${sessionType}`);
 
-            return { success: true };
-        } catch (error: any) {
-            console.error('Login error:', error);
             return {
-                success: false,
-                message: error.response?.data?.message || 'Login failed. Please check your credentials.'
+                success: true,
+                token,
+                user
             };
+        } catch (error) {
+            console.error('Login failed:', error);
+            throw error;
         }
     };
 
-    // Register user (always registers as regular user)
+    const logout = (role?: 'admin' | 'user' | undefined) => {
+        if (role) {
+            const sessionType = role.toLowerCase();
+            setSessions(prev => ({
+                ...prev,
+                [sessionType]: { user: null, token: null, role: sessionType }
+            }));
+
+            switch (sessionType) {
+                case 'admin':
+                    localStorage.removeItem('admin_token');
+                    break;
+                case 'user':
+                    localStorage.removeItem('user_token');
+                    break;
+                default:
+                    localStorage.removeItem('staff_token');
+            }
+
+            if (activeSession === sessionType) {
+                const otherActiveSession = Object.entries(sessions)
+                    .find(([key, sess]) => key !== sessionType && sess.user);
+                setActiveSession(otherActiveSession ? otherActiveSession[0] : null);
+            }
+        } else {
+            setSessions({
+                admin: { user: null, token: null, role: 'admin' },
+                user: { user: null, token: null, role: 'user' },
+                staff_warehouse: { user: null, token: null, role: 'staff_warehouse' },
+                staff_shipping: { user: null, token: null, role: 'staff_shipping' },
+                staff_order: { user: null, token: null, role: 'staff_order' }
+            });
+            setActiveSession(null);
+            localStorage.clear();
+        }
+    };
+
     const register = async (formData: RegisterFormData): Promise<AuthResponse> => {
         try {
-            const { token, user } = await authService.register(formData);
+            const response = await authService.register(formData);
+            const { token, user } = response;
 
-            // Store token for user role
-            localStorage.setItem('user_token', token);
+            if (token && user) {
+                localStorage.setItem('token', token);
+                localStorage.setItem('user_token', token);
 
-            // Also set as current token
-            localStorage.setItem('token', token);
+                setSessions(prev => ({
+                    ...prev,
+                    user: { user, token, role: 'user' }
+                }));
+                setActiveSession('user');
+            }
 
-            // Update session
-            setSessions(prev => ({
-                ...prev,
-                user: { user, token, role: 'user' }
-            }));
-
-            // Set as active session
-            setActiveSession('user');
-
-            return { success: true };
-        } catch (error: any) {
             return {
-                success: false,
-                message: error.response?.data?.message || 'Registration failed'
+                success: true,
+                token: token || '',
+                user: user || null
             };
+        } catch (error) {
+            console.error('Registration failed:', error);
+            throw error;
         }
     };
 
-    // Logout from current session
-    const logout = (role?: 'admin' | 'user') => {
-        const roleToLogout = role || activeSession;
-
-        if (roleToLogout) {
-            // Remove token for the specific role
-            localStorage.removeItem(`${roleToLogout}_token`);
-
-            // Update session state
-            setSessions(prev => ({
-                ...prev,
-                [roleToLogout]: { user: null, token: null, role: roleToLogout }
-            }));
-
-            // If logging out of active session, switch to other session if available
-            if (!role || roleToLogout === activeSession) {
-                const otherRole = roleToLogout === 'admin' ? 'user' : 'admin';
-
-                if (sessions[otherRole]?.user) {
-                    setActiveSession(otherRole);
-                    localStorage.setItem('token', sessions[otherRole].token!);
-                } else {
-                    setActiveSession(null);
-                    localStorage.removeItem('token');
-                }
-            }
-        }
-    };
-
-    // Switch between sessions
     const switchSession = (role: string): boolean => {
-        console.log(`Attempting to switch to ${role} session`);
-
-        // Check if the session exists and has a user
-        if (sessions[role]?.user) {
-            console.log(`Valid ${role} session found, switching...`);
-
-            // Set the active session
+        const session = sessions[role];
+        if (session?.user && session?.token) {
             setActiveSession(role);
-
-            // Update token in localStorage
-            if (sessions[role]?.token) {
-                console.log(`Setting token for ${role} session`);
-                localStorage.setItem('token', sessions[role].token!);
-            }
-
+            localStorage.setItem('token', session.token);
             return true;
         }
-
-        console.log(`No valid ${role} session found`);
         return false;
     };
 
-    // Get all active sessions
     const getActiveSessions = () => {
         return Object.entries(sessions)
             .filter(([_, session]) => session.user !== null)
-            .map(([role, _]) => role);
+            .map(([role]) => role);
     };
 
     return {

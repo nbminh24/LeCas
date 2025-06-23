@@ -3,6 +3,7 @@ export enum UserRole {
     STAFF = 'staff',
     STAFF_WAREHOUSE = 'staff_warehouse',
     STAFF_SHIPPING = 'staff_shipping',
+    STAFF_ORDER = 'staff_order',
     USER = 'user'
 }
 

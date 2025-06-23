@@ -16,7 +16,7 @@ export const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
     requiredRole,
     redirectPath = ROUTES.LOGIN
 }) => {
-    const { user, isAuthenticated, isLoading, activeRole } = useAuth();
+    const { user, isAuthenticated, isLoading } = useAuth();
 
     // Show loading spinner while checking authentication status
     if (isLoading) {
@@ -24,10 +24,9 @@ export const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
         return <LoadingSpinner />;
     }
 
-    console.log('RoleBasedRoute: Current state:', {
+    console.log('RoleBasedRoute: Auth state:', {
         isAuthenticated,
         userRole: user?.role,
-        activeRole,
         requiredRole,
         currentPath: window.location.pathname
     });
@@ -38,69 +37,53 @@ export const RoleBasedRoute: React.FC<RoleBasedRouteProps> = ({
         return <Navigate to={redirectPath} replace />;
     }
 
-    console.log('RoleBasedRoute: User is authenticated', {
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-        requiredRole: requiredRole || 'none',
-        roleMatch: requiredRole ? user.role === requiredRole : 'no required role'
-    });
-
     // If a specific role is required, check if user has it
     if (requiredRole) {
-        console.log(`RoleBasedRoute: Checking if user has required role: ${requiredRole}`);
         const userRoleLower = user.role.toLowerCase();
         const requiredRoleLower = requiredRole.toLowerCase();
 
         if (userRoleLower !== requiredRoleLower) {
             console.log(`RoleBasedRoute: User role ${user.role} doesn't match required role ${requiredRole}`);
-            // Redirect based on user's actual role
-            switch (userRoleLower) {
-                case UserRole.ADMIN.toLowerCase():
-                    console.log('RoleBasedRoute: Redirecting admin to admin dashboard');
-                    return <Navigate to={ROUTES.ADMIN.DASHBOARD} replace />;
-                case UserRole.STAFF_WAREHOUSE.toLowerCase():
-                    return <Navigate to={ROUTES.STAFF.WAREHOUSE.INVENTORY} replace />;
-                case UserRole.STAFF_SHIPPING.toLowerCase():
-                    return <Navigate to={ROUTES.STAFF.SHIPPING.SHIPMENTS} replace />;
-                case 'staff_order':
-                    return <Navigate to={ROUTES.STAFF.ORDERS} replace />;
-                case UserRole.USER.toLowerCase():
-                default:
-                    console.log('RoleBasedRoute: Redirecting user to home');
-                    return <Navigate to={ROUTES.USER.HOME} replace />;
-            }
+            // Redirect to appropriate dashboard based on user's actual role
+            return redirectToRoleDashboard(user.role);
         }
+    } else {
+        // If no specific role is required (like on /dashboard), redirect based on user's role
+        return redirectToRoleDashboard(user.role);
     }
 
-    // If no specific role is required, redirect based on user's role
-    if (!requiredRole) {
-        console.log("RoleBasedRoute: No specific role required, redirecting based on user role:", user.role);
-        const userRoleLower = user.role.toLowerCase();
-
-        switch (userRoleLower) {
-            case UserRole.ADMIN.toLowerCase():
-                console.log('RoleBasedRoute: Redirecting admin to dashboard');
-                return <Navigate to={ROUTES.ADMIN.DASHBOARD} replace />;
-            case UserRole.STAFF_WAREHOUSE.toLowerCase():
-                console.log('RoleBasedRoute: Redirecting warehouse staff');
-                return <Navigate to={ROUTES.STAFF.WAREHOUSE.INVENTORY} replace />;
-            case UserRole.STAFF_SHIPPING.toLowerCase():
-                console.log('RoleBasedRoute: Redirecting shipping staff');
-                return <Navigate to={ROUTES.STAFF.SHIPPING.SHIPMENTS} replace />;
-            case 'staff_order':
-                console.log('RoleBasedRoute: Redirecting order staff');
-                return <Navigate to={ROUTES.STAFF.ORDERS} replace />;
-            case UserRole.USER.toLowerCase():
-                console.log('RoleBasedRoute: Redirecting regular user');
-                return <Navigate to={ROUTES.USER.HOME} replace />;
-            default:
-                console.log('RoleBasedRoute: Unknown role, redirecting to home');
-                return <Navigate to={ROUTES.USER.HOME} replace />;
-        }
-    }
-
-    // If we get here, either no role was required, or the user has the required role
-    console.log('RoleBasedRoute: Rendering protected content');
+    // If we get here, the user has the required role
     return <Outlet />;
 };
+
+// Helper function to handle role-based redirects
+function redirectToRoleDashboard(role: string): React.ReactElement {
+    const roleLower = role.toLowerCase();
+    console.log(`Redirecting user with role ${role} (${roleLower}) to appropriate dashboard`);
+
+    switch (roleLower) {
+        case UserRole.ADMIN.toLowerCase():
+            console.log('Redirecting to admin dashboard');
+            return <Navigate to={ROUTES.ADMIN.DASHBOARD} replace />;
+
+        case UserRole.STAFF_WAREHOUSE.toLowerCase():
+            console.log('Redirecting to warehouse staff dashboard');
+            return <Navigate to={ROUTES.STAFF.WAREHOUSE.INVENTORY} replace />;
+
+        case UserRole.STAFF_SHIPPING.toLowerCase():
+            console.log('Redirecting to shipping staff dashboard');
+            return <Navigate to={ROUTES.STAFF.SHIPPING.SHIPMENTS} replace />;
+
+        case UserRole.STAFF_ORDER.toLowerCase():
+            console.log('Redirecting to order staff dashboard');
+            return <Navigate to={ROUTES.STAFF.ORDERS} replace />;
+
+        case UserRole.USER.toLowerCase():
+            console.log('Redirecting to user dashboard');
+            return <Navigate to={ROUTES.USER.HOME} replace />;
+
+        default:
+            console.warn('Unknown role:', role);
+            return <Navigate to={ROUTES.USER.HOME} replace />;
+    }
+}
