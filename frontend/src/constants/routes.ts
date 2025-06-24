@@ -34,7 +34,7 @@ export const ROUTES = {
     // Staff routes
     STAFF: {
         DASHBOARD: '/staff/dashboard',
-        ORDERS: '/staff/orders',
+        ORDERS: '/staff/orders/pending',
         ORDER_DETAIL: '/staff/orders/:id',
         SEARCH_ORDERS: '/staff/search',
 

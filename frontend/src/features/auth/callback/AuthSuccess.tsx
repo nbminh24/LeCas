@@ -47,7 +47,7 @@ const AuthSuccess = () => {
                                 localStorage.setItem('staff_token', token);
                                 localStorage.removeItem('user_token');
                                 localStorage.removeItem('admin_token');
-                                setTimeout(() => navigate(ROUTES.STAFF.SHIPPING.SHIPMENTS), 500);
+                                setTimeout(() => navigate('/staff/shipping/orders/pending'), 500);
                                 break;
 
                             case UserRole.STAFF_ORDER.toLowerCase():
@@ -55,7 +55,7 @@ const AuthSuccess = () => {
                                 localStorage.setItem('staff_token', token);
                                 localStorage.removeItem('user_token');
                                 localStorage.removeItem('admin_token');
-                                setTimeout(() => navigate(ROUTES.STAFF.ORDERS), 500);
+                                setTimeout(() => navigate('/staff/orders/pending'), 500);
                                 break;
 
                             case UserRole.USER.toLowerCase():

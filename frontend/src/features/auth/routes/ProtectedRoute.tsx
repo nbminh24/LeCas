@@ -53,10 +53,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
                 console.log("ProtectedRoute: Redirecting admin to admin dashboard");
                 return <Navigate to={ROUTES.ADMIN.DASHBOARD} replace />;
             case UserRole.STAFF_WAREHOUSE.toLowerCase():
+                return <Navigate to={ROUTES.STAFF.WAREHOUSE.INVENTORY} replace />;
             case UserRole.STAFF_SHIPPING.toLowerCase():
+                // Đảm bảo staff_shipping luôn về đúng route mới
+                return <Navigate to="/staff/shipping/orders/pending" replace />;
             case 'staff_order':
-                console.log("ProtectedRoute: Redirecting staff to staff dashboard");
-                return <Navigate to={ROUTES.STAFF.DASHBOARD} replace />;
+                return <Navigate to={ROUTES.STAFF.ORDERS} replace />;
             case UserRole.USER.toLowerCase():
             default:
                 console.log("ProtectedRoute: Redirecting user to user dashboard");

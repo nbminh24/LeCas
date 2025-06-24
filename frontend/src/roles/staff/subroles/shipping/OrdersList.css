@@ -1,0 +1,71 @@
+/* ShippingOrdersList.css - dùng lại style của OrdersList cho bảng giao vận */
+.orders-list-container {
+    margin: 0 auto;
+    max-width: 1100px;
+    padding: 24px 0;
+}
+
+.orders-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 18px;
+}
+
+.orders-list-search-row {
+    display: flex;
+    align-items: center;
+}
+
+.orders-list-search-input {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    font-size: 15px;
+    width: 260px;
+    margin-right: 8px;
+}
+
+.export-btn-right {
+    display: flex;
+    align-items: center;
+}
+
+.orders-grid {
+    margin-top: 0;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-view,
+.btn-action,
+.primary-button {
+    border: none;
+    border-radius: 5px;
+    padding: 6px 14px;
+    font-size: 15px;
+    cursor: pointer;
+    background: #f5f5f5;
+    color: #1976d2;
+    transition: background 0.2s;
+}
+
+.btn-view:hover,
+.btn-action:hover,
+.primary-button:hover {
+    background: #e3e9f7;
+}
+
+.primary-button {
+    background: #111;
+    color: #fff;
+    font-weight: 500;
+}
+
+.primary-button:hover {
+    background: #333;
+}

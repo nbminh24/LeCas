@@ -27,16 +27,20 @@ const StaffLayout: React.FC = () => {
                 return (
                     <ul>
                         <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Bảng điều khiển</Link></li>
-                        <li><Link to="/staff/orders" className={isActive('/staff/orders')}>Đơn hàng</Link></li>
+                        <li><Link to="/staff/orders/pending" className={isActive('/staff/orders/pending')}>Cần xử lý</Link></li>
+                        <li><Link to="/staff/orders/confirmed" className={isActive('/staff/orders/confirmed')}>Đã xác nhận</Link></li>
                     </ul>
                 );
 
             case UserRole.STAFF_WAREHOUSE:
                 return (
                     <ul>
-                        <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Bảng điều khiển</Link></li>
-                        <li><Link to="/staff/warehouse/inventory" className={isActive('/staff/warehouse/inventory')}>Tồn kho</Link></li>
-                        <li><Link to="/staff/warehouse/reports" className={isActive('/staff/warehouse/reports')}>Báo cáo tồn kho</Link></li>
+                        <li><Link to="/staff/warehouse/inventory" className={isActive('/staff/warehouse/inventory')}>Quản lý kho hàng</Link></li>
+                        <li><Link to="/staff/warehouse/orders" className={isActive('/staff/warehouse/orders')}>Đơn cần xử lý</Link></li>
+                        <li><Link to="/staff/warehouse/packed" className={isActive('/staff/warehouse/packed')}>Đơn đã đóng gói</Link></li>
+                        <li><Link to="/staff/warehouse/import" className={isActive('/staff/warehouse/import')}>Nhập hàng</Link></li>
+                        <li><Link to="/staff/warehouse/returns" className={isActive('/staff/warehouse/returns')}>Đổi/Trả hàng</Link></li>
+                        <li><Link to="/staff/warehouse/reports" className={isActive('/staff/warehouse/reports')}>Báo cáo kho</Link></li>
                     </ul>
                 );
 
@@ -44,8 +48,11 @@ const StaffLayout: React.FC = () => {
                 return (
                     <ul>
                         <li><Link to="/staff/dashboard" className={isActive('/staff/dashboard')}>Bảng điều khiển</Link></li>
-                        <li><Link to="/staff/shipping/shipments" className={isActive('/staff/shipping/shipments')}>Lô hàng</Link></li>
-                        <li><Link to="/staff/shipping/tracking" className={isActive('/staff/shipping/tracking')}>Theo dõi</Link></li>
+                        <li><Link to="/staff/shipping/orders/pending" className={isActive('/staff/shipping/orders/pending')}>Đơn chờ giao</Link></li>
+                        <li><Link to="/staff/shipping/orders/created" className={isActive('/staff/shipping/orders/created')}>Đã tạo vận đơn</Link></li>
+                        <li><Link to="/staff/shipping/orders/delivered" className={isActive('/staff/shipping/orders/delivered')}>Đã giao thành công</Link></li>
+                        <li><Link to="/staff/shipping/orders/failed" className={isActive('/staff/shipping/orders/failed')}>Giao thất bại</Link></li>
+                        <li><Link to="/staff/shipping/orders/cancelled" className={isActive('/staff/shipping/orders/cancelled')}>Đã hủy vận đơn</Link></li>
                     </ul>
                 );
             default:
@@ -70,6 +77,12 @@ const StaffLayout: React.FC = () => {
                 <nav className="staff-nav admin-nav">
                     {renderNavigation()}
                 </nav>
+                <div className="sidebar-footer">
+                    <button onClick={handleLogout} className="logout-btn">
+                        <span className="icon">🚪</span>
+                        Đăng xuất
+                    </button>
+                </div>
             </aside>
             <div className="staff-content admin-content">
                 <header className="staff-header admin-header">

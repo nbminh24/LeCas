@@ -5,24 +5,17 @@ import { UserRole } from '../../../constants/routes';
 import './Dashboard.css';
 
 // Mock data for demonstration
-const mockStats = (date: string) => ({
-    total: 12,
-    pending: 4,
-    readyToShip: 3,
-    shipped: 5,
-});
-const mockOrders = [
-    { id: 'ORD-1001', customer: 'John Smith', date: '2025-06-23', status: 'pending', items: 3 },
-    { id: 'ORD-1002', customer: 'Sarah Johnson', date: '2025-06-23', status: 'pending', items: 2 },
-    { id: 'ORD-1003', customer: 'Michael Brown', date: '2025-06-23', status: 'readyToShip', items: 1 },
-    { id: 'ORD-1004', customer: 'Emily Davis', date: '2025-06-23', status: 'readyToShip', items: 4 },
-    { id: 'ORD-1005', customer: 'David Wilson', date: '2025-06-23', status: 'shipped', items: 2 },
-    { id: 'ORD-1006', customer: 'Jessica Taylor', date: '2025-06-23', status: 'shipped', items: 1 },
-];
 const mockActivity = [
     { time: '09:45', desc: 'Xác nhận đơn #1001' },
     { time: '10:15', desc: 'Hủy đơn #1007' },
     { time: '11:00', desc: 'Bàn giao đơn #1005 cho vận chuyển' },
+];
+
+const mockOrders = [
+    { id: '1001', customer: 'Nguyễn Văn A', date: '2023-10-10', status: 'pending', items: 3 },
+    { id: '1002', customer: 'Trần Thị B', date: '2023-10-11', status: 'readyToShip', items: 1 },
+    { id: '1003', customer: 'Lê Văn C', date: '2023-10-10', status: 'shipped', items: 2 },
+    { id: '1004', customer: 'Phạm Thị D', date: '2023-10-12', status: 'pending', items: 5 },
 ];
 
 const Dashboard: React.FC = () => {
@@ -30,7 +23,6 @@ const Dashboard: React.FC = () => {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().slice(0, 10));
     const [searchText, setSearchText] = useState('');
-    const stats = mockStats(selectedDate);
 
     // Click handler for stat cards
     const handleStatClick = (type: string) => {
@@ -49,8 +41,8 @@ const Dashboard: React.FC = () => {
         }
     };
 
-    // Filter orders by date
-    const ordersToday = mockOrders.filter(o => o.date === selectedDate);
+    // Lọc đơn chưa xử lý (pending) của ngày hôm đó
+    const ordersToday = mockOrders.filter(o => o.date === selectedDate && o.status === 'pending');
     const filteredOrdersToday = ordersToday.filter(order =>
         order.id.toLowerCase().includes(searchText.toLowerCase()) ||
         order.customer.toLowerCase().includes(searchText.toLowerCase())
@@ -63,31 +55,12 @@ const Dashboard: React.FC = () => {
     return (
         <div className="staff-dashboard order-dashboard">
             <div className="dashboard-header">
-                <h2>Bảng điều khiển đơn hàng</h2>
                 <input
                     type="date"
                     value={selectedDate}
                     onChange={e => setSelectedDate(e.target.value)}
                     className="date-picker"
                 />
-            </div>
-            <div className="stat-cards-row">
-                <div className="stat-card" onClick={() => handleStatClick('total')}>
-                    <div className="stat-label">Tổng đơn nhận</div>
-                    <div className="stat-value">{stats.total}</div>
-                </div>
-                <div className="stat-card clickable" onClick={() => handleStatClick('pending')}>
-                    <div className="stat-label">Chờ xác nhận</div>
-                    <div className="stat-value">{stats.pending}</div>
-                </div>
-                <div className="stat-card clickable" onClick={() => handleStatClick('readyToShip')}>
-                    <div className="stat-label">Chờ bàn giao vận chuyển</div>
-                    <div className="stat-value">{stats.readyToShip}</div>
-                </div>
-                <div className="stat-card clickable" onClick={() => handleStatClick('shipped')}>
-                    <div className="stat-label">Đã bàn giao vận chuyển</div>
-                    <div className="stat-value">{stats.shipped}</div>
-                </div>
             </div>
             <div className="dashboard-lists">
                 <div className="orders-list-block">
@@ -100,13 +73,13 @@ const Dashboard: React.FC = () => {
                             className="orders-list-search-input"
                         />
                     </div>
-                    <h3>Danh sách đơn đã nhận ({filteredOrdersToday.length})</h3>
+                    <h3>Danh sách đơn chưa xử lý ({filteredOrdersToday.length})</h3>
                     <ul className="order-list">
                         {filteredOrdersToday.map(order => (
                             <li key={order.id} className="order-card">
                                 <div>
                                     <b>{order.id}</b> - {order.customer} ({order.items} sản phẩm)
-                                    <span className={`order-status-badge status-${order.status}`}>{order.status === 'pending' ? 'Chờ xác nhận' : order.status === 'readyToShip' ? 'Chờ bàn giao' : order.status === 'shipped' ? 'Đã bàn giao' : order.status}</span>
+                                    <span className={`order-status-badge status-${order.status}`}>Chờ xác nhận</span>
                                 </div>
                             </li>
                         ))}
